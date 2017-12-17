@@ -1,11 +1,12 @@
 SUMMARY = "A GPS Server application and library which allows easy sharing of RTCM Differential GPS updates "
 DESCRIPTION = "Pylon GPS makes it easy to share GPS updates from your basestation and allows mobile units to get updates from any nearby basestations."
 HOMEPAGE = "http://www.pylongps.com"
-LICENSE = "LGPL3"
-#LIC_FILES_CHKSUM = "file://readme.txt;beginline=104;endline=141;md5=9adf78faf728f2be96f266651c3e1d05"
+LICENSE = "LGPLv3"
+PR = "r0"
 
+SRCREV = "${AUTOREV}"
 SRC_URI = " \
-    git://github.com/charlesrwest/pylonGPS.git \
+    git://github.com/charlesrwest/pylonGPS.git;protocol=https \
 "
 
 S = "${WORKDIR}/git"
@@ -16,7 +17,7 @@ inherit pkgconfig cmake
 inherit useradd
 
 USERADD_PACKAGES= "${PN}"
-USERADD_PARAM_${PN} = “-d /home/pylon -r -s /bin/bash pylon"
+USERADD_PARAM_${PN} = "-d /home/pylon -r -s /bin/bash pylon"
 
 do_install() {
     install -d ${D}${bindir}

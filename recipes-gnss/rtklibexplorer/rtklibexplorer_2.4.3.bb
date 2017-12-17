@@ -2,12 +2,17 @@ SUMMARY = "RTKLib GPS real-time kinematic open-source software."
 DESCRIPTION = "Open-source software to get accurate gps position information."
 HOMEPAGE = "http://www.rtklib.com"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://readme.txt;beginline=104;endline=141;md5=9adf78faf728f2be96f266651c3e1d05"
+LIC_FILES_CHKSUM = "file://readme.txt;md5=425f15fc0dc7e3abe85213c18f5bf1f6"
 
-# corresponds to "rtklib 2.4.2 p11"
-#SRCREV = "76b9c97257f304aedad38b5a6bbbac444724aab3"
+PR = "r0"
+
+BB_STRICT_CHECKSUM = "0"
+
+SRCREV = "${AUTOREV}"
+
+#Try to merge original licenso from RTKLIB
 SRC_URI = " \
-    git://github.com/rtklibexplorer/RTKLIB.git \
+    git://github.com/rtklibexplorer/RTKLIB.git;branch=demo5 \
     file://base_m8t.cmd \
 "
 
@@ -32,7 +37,7 @@ do_install() {
 
     # install cmd files to /etc/rtklib/cmd/
     install -d ${D}${sysconfdir}/rtklib/cmd
-    install -m 0644 ${WORKDIR}/rtkrcv.conf ${D}${sysconfdir}/rtklib/cmd/
+    install -m 0644 ${WORKDIR}/base_m8t.cmd ${D}${sysconfdir}/rtklib/cmd/
 
     # copy data files to /etc/rtklib/data
     install -d ${D}${sysconfdir}/rtklib/data
