@@ -2,7 +2,11 @@ SUMMARY = "A GPS Server application and library which allows easy sharing of RTC
 DESCRIPTION = "Pylon GPS makes it easy to share GPS updates from your basestation and allows mobile units to get updates from any nearby basestations."
 HOMEPAGE = "http://www.pylongps.com"
 LICENSE = "LGPLv3"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=6df79487081a679ce42441612c160a88"
+
 PR = "r0"
+
+DEPENDS = "protobuf-native"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = " \
