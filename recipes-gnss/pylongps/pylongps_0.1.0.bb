@@ -6,7 +6,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=6df79487081a679ce42441612c160a88"
 
 PR = "r0"
 
-DEPENDS = "protobuf-native"
+DEPENDS += "protobuf-native"
+DEPENDS += "zeromq"
+DEPENDS += "poco-native"
+DEPENDS += "sqlite-native"
+DEPENDS += "libsodium-native"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = " \
