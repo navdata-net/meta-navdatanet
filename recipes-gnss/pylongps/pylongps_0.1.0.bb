@@ -24,7 +24,7 @@ APPS = "caster transceiver"
 inherit pkgconfig cmake
 inherit useradd
 
-USERADD_PACKAGES= "${PN}"
+USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "-d /home/pylon -r -s /bin/bash pylon"
 
 do_install() {
