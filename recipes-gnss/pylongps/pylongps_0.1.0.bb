@@ -1,4 +1,4 @@
-SUMMARY = "A GPS Server application and library which allows easy sharing of RTCM Differential GPS updates "
+SUMMARY = "A GPS Server application and library which allows easy sharing of RTCM Differential GPS updates"
 DESCRIPTION = "Pylon GPS makes it easy to share GPS updates from your basestation and allows mobile units to get updates from any nearby basestations."
 HOMEPAGE = "http://www.pylongps.com"
 LICENSE = "LGPLv3"
