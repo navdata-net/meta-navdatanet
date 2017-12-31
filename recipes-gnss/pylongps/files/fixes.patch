@@ -1,0 +1,19 @@
+--- a/src/library/commandLineArgumentParser.hpp	2017-12-30 20:49:04.574812041 +0100
++++ b/src/library/commandLineArgumentParser.hpp	2017-12-30 20:48:56.038264819 +0100
+@@ -4,6 +4,7 @@
+ #include<string>
+ #include<algorithm>
+ #include<cstdio>
++#include<vector>
+ 
+ namespace pylongps
+ {
+--- a/src/library/utilityFunctions.hpp	2017-12-31 01:38:41.762188120 +0100
++++ b/src/library/utilityFunctions.hpp	2017-12-31 01:40:21.496663731 +0100
+@@ -1,5 +1,6 @@
+ #pragma once
+ 
++#include <math.h>
+ #include "zmq.hpp"
+ #include "SOMException.hpp"
+ #include <tuple>

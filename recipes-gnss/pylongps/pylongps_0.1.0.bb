@@ -13,9 +13,10 @@ DEPENDS += "sqlite-native"
 DEPENDS += "libsodium-native"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = " \
-    git://github.com/charlesrwest/pylonGPS.git;protocol=https \
-"
+SRC_URI = "git://github.com/charlesrwest/pylonGPS.git;protocol=https \
+           file://fixes.patch \
+           file://yocto.patch \
+           "
 
 S = "${WORKDIR}/git"
 
