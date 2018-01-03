@@ -23,6 +23,7 @@ APPS = "pos2kml str2str rnx2rtkp convbin rtkrcv"
 do_configure[noexec] = "1"
 
 CFLAGS += "-I${S}/src"
+
 do_compile() {
     for APP in ${APPS}; do
         oe_runmake -C ${S}/app/${APP}/gcc/
