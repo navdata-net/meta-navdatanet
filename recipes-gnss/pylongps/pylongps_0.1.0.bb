@@ -4,7 +4,7 @@ HOMEPAGE = "http://www.pylongps.com"
 LICENSE = "LGPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=6df79487081a679ce42441612c160a88"
 
-PR = "r0"
+PR = "rc0"
 
 DEPENDS += "protobuf protobuf-native"
 DEPENDS += "zeromq cppzmq"
@@ -26,6 +26,9 @@ S = "${WORKDIR}/git"
 APPS = "caster transceiver"
 LIBS = "libpylongps.so"
 
+FILES_SOLIBSDEV = ""
+FILES_${PN} += " ${libdir}/libpylongps.so"
+
 inherit pkgconfig cmake
 inherit useradd
 
@@ -36,6 +39,7 @@ do_install() {
     install -d ${D}${bindir}
     for APP in ${APPS}; do
         install -m 0755 ${B}/bin/${APP} ${D}${bindir}
+        #chrpath -d ${D}${bindir}/${APP}
     done
 
     install -d ${D}${libdir}
