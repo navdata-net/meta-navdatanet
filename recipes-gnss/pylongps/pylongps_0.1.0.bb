@@ -14,13 +14,17 @@ DEPENDS += "libsodium-native"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/charlesrwest/pylonGPS.git;protocol=https \
+           file://caster.pylonCasterConfiguration \
+           file://caster.service \
            file://fixes.patch \
            file://yocto.patch \
+           file://navdatanet.patch \
            "
 
 S = "${WORKDIR}/git"
 
 APPS = "caster transceiver"
+LIBS = "libpylongps.so"
 
 inherit pkgconfig cmake
 inherit useradd
@@ -31,7 +35,12 @@ USERADD_PARAM_${PN} = "-d /home/pylon -r -s /bin/bash pylon"
 do_install() {
     install -d ${D}${bindir}
     for APP in ${APPS}; do
-        install -m 0755 ${B}/${APP} ${D}${bindir}
+        install -m 0755 ${B}/bin/${APP} ${D}${bindir}
+    done
+
+    install -d ${D}${libdir}
+    for LIB in ${LIBS}; do
+        install -m 0644 ${B}/lib/${LIB} ${D}${libdir}
     done
 
     # deploy configuration files to /etc/pylon
@@ -40,7 +49,7 @@ do_install() {
 
     # deploy systemd service definition
     install -d ${D}${sysconfdir}/systemd/system
-    install -m 0644 ${WORKDIR}/caster.service /etc/systemd/system
+    install -m 0644 ${WORKDIR}/caster.service ${D}${sysconfdir}/systemd/system
 }
 
 #CONFFILES_${PN} += "${sysconfdir}/default/rtkrcv.conf"
