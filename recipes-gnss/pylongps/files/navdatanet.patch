@@ -1,0 +1,110 @@
+--- a/src/executables/stressTester/main.cpp
++++ b/src/executables/stressTester/main.cpp
+@@ -30,10 +30,10 @@ int main(int argc, char** argv)
+ Poco::Net::HostEntry host;
+ 
+ SOM_TRY
+-host = Poco::Net::DNS::hostByName("www.pylongps.com");
++host = Poco::Net::DNS::hostByName("pylon.navdata.net");
+ SOM_CATCH("Error, unable to resolve URL\n")
+ 
+-printf("Accessing www.pylongps.com\n");
++printf("Accessing pylon.navdata.net\n");
+ for(int i=0; i<host.addresses().size(); i++)
+ {
+ printf("IP Addresses: %s\n", host.addresses()[i].toString().c_str());
+--- a/src/executables/testDataSenders/main.cpp
++++ b/src/executables/testDataSenders/main.cpp
+@@ -7,7 +7,7 @@
+ 
+ using namespace pylongps;
+ 
+-//Construct a pair of dummy basestations that send regular updates to the pylongps.com caster (port 10001)
++//Construct a pair of dummy basestations that send regular updates to the pylongps caster (port 10001)
+ const int REGISTRATION_PORT = 10001;
+ const int CLIENT_REQUEST_PORT = 10002;
+ const int CLIENT_PUBLISHING_PORT = 10003;
+@@ -29,10 +29,10 @@ int main(int argc, char** argv)
+ Poco::Net::HostEntry host;
+ 
+ SOM_TRY
+-host = Poco::Net::DNS::hostByName("www.pylongps.com");
++host = Poco::Net::DNS::hostByName("pylon.navdata.net");
+ SOM_CATCH("Error, unable to resolve URL\n")
+ 
+-printf("Accessing www.pylongps.com\n");
++printf("Accessing pylon.navdata.net\n");
+ for(int i=0; i<host.addresses().size(); i++)
+ {
+ printf("IP Addresses: %s\n", host.addresses()[i].toString().c_str());
+--- a/src/executables/transceiver/commandLineTransceiver.cpp
++++ b/src/executables/transceiver/commandLineTransceiver.cpp
+@@ -171,7 +171,7 @@ parser.addSuggestedUsage("credential_file", {"pathToCredentialsFile"});
+ }
+ 
+ /**
+-This function initializes a structure containing the information required to connect to a caster using information associated with a option to the command line parser or the URL/default information associated with pylongps.com if the option is not found.
++This function initializes a structure containing the information required to connect to a caster using information associated with a option to the command line parser or the URL/default information associated with pylon.navdata.net if the option is not found.
+ @param inputCasterOptionString: The option to get it from
+ @param inputCasterInfoBuffer: The structure to store it in
+ @return: True if the data was able to be received successfully, false otherwise
+@@ -207,11 +207,11 @@ std::string pylonGPSIPAddress;
+ 
+ try
+ {
+-pylonGPSIPAddress = getURLIPAddress("pylongps.com");
++pylonGPSIPAddress = getURLIPAddress("pylon.navdata.net");
+ }
+ catch(const std::exception &inputException)
+ {
+-fprintf(stderr, "Error, unable to resolve pylongps.com");
++fprintf(stderr, "Error, unable to resolve pylon.navdata.net");
+ return false;
+ }
+ 
+--- a/src/executables/transceiver/main.cpp
++++ b/src/executables/transceiver/main.cpp
+@@ -24,8 +24,8 @@ using namespace pylongps;
+ // -read_tcp ipAddress PortNumber -> use given tcp server as data source
+ // -read_zmq ipAddress PortNumber -> use given zmq publisher as data source
+ // -read_basestation casterID streamID
+-// -input_caster IP PortNumbers -> use non pylongps.com caster
+-// -output_caster IP PortNumbers -> use non pylongps.com caster
++// -input_caster IP PortNumbers -> use specified caster IP and port
++// -output_caster IP PortNumbers -> use specified caster IP and port
+ // -output_file filename
+ // -output_tcp PortNumber
+ // -output_zmq PortNumber
+--- a/src/executables/transceiverGUI/tranceiverGUI.cpp
++++ b/src/executables/transceiverGUI/tranceiverGUI.cpp
+@@ -27,7 +27,7 @@ SOM_CATCH("Error, unable to initialize tranceiver\n")
+ //Update caster IP string
+ Poco::Net::HostEntry host;
+ SOM_TRY
+-host = Poco::Net::DNS::hostByName("www.pylongps.com");
++host = Poco::Net::DNS::hostByName("pylon.navdata.net");
+ SOM_CATCH("Error, unable to resolve URL\n")
+ if(host.addresses().size() == 0)
+ {
+@@ -332,7 +332,7 @@ if(cacheExpired)
+ Poco::Net::HostEntry host;
+ 
+ SOM_TRY
+-host = Poco::Net::DNS::hostByName("www.pylongps.com");
++host = Poco::Net::DNS::hostByName("pylon.navdata.net");
+ SOM_CATCH("Error, unable to resolve URL\n")
+ 
+ if(host.addresses().size() == 0)
+--- a/src/library/tranceiver.cpp
++++ b/src/library/tranceiver.cpp
+@@ -40,8 +40,8 @@ std::string casterIPAddress;
+ if(inputConfiguration.basestation_receivers_size() > 0 || inputConfiguration.basestation_senders_size() > 0)
+ {
+ SOM_TRY
+-casterIPAddress = getURLIPAddress("pylongps.com");
+-SOM_CATCH("Error, unable to resolve pylongps.com")
++casterIPAddress = getURLIPAddress("pylon.navdata.net");
++SOM_CATCH("Error, unable to resolve pylon.navdata.net")
+ }
+ 
+ std::map<int64_t, std::string> receiverIDToConnectionString;
