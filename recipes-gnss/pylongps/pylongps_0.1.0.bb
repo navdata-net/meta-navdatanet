@@ -4,7 +4,7 @@ HOMEPAGE = "http://www.pylongps.com"
 LICENSE = "LGPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=6df79487081a679ce42441612c160a88"
 
-PR = "rc0"
+PR = "rc1"
 
 DEPENDS += "protobuf protobuf-native"
 DEPENDS += "zeromq cppzmq"
@@ -30,6 +30,8 @@ FILES_SOLIBSDEV = ""
 FILES_${PN} += " ${libdir}/libpylongps.so"
 
 inherit pkgconfig cmake
+EXTRA_OECMAKE += " -DCMAKE_SKIP_RPATH=TRUE"
+
 inherit useradd
 
 USERADD_PACKAGES = "${PN}"
@@ -45,6 +47,7 @@ do_install() {
     install -d ${D}${libdir}
     for LIB in ${LIBS}; do
         install -m 0644 ${B}/lib/${LIB} ${D}${libdir}
+        #chrpath -d ${D}${libdir}/${LIB}
     done
 
     # deploy configuration files to /etc/pylon
