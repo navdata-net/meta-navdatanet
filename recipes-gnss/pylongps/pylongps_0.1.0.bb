@@ -35,7 +35,7 @@ EXTRA_OECMAKE += " -DCMAKE_SKIP_RPATH=TRUE"
 inherit useradd
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "-d /home/pylon -r -s /bin/bash pylon"
+USERADD_PARAM_${PN} = "-d /home/pylon -r -m -s /bin/sh pylon"
 
 do_install() {
     install -d ${D}${bindir}
