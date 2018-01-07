@@ -11,14 +11,18 @@ BB_STRICT_CHECKSUM = "0"
 SRCREV = "${AUTOREV}"
 
 #Try to merge original licenso from RTKLIB
-SRC_URI = " \
-    git://github.com/rtklibexplorer/RTKLIB.git;branch=demo5 \
-    file://base_m8t.cmd \
+SRC_URI = "git://github.com/rtklibexplorer/RTKLIB.git;branch=demo5 \
+           file://base_m8t.cmd \
+           file://rtkrcv.service \
+           file://rtkrcv.conf \
+           file://rtkstart.sh \
+           file://rtkstop.sh \
 "
 
 S = "${WORKDIR}/git"
-# CUI apps listed in makeall.sh
+
 APPS = "pos2kml str2str rnx2rtkp convbin rtkrcv"
+RTKCONFS = "rtkrcv.conf rtkstart.sh rtkstop.sh"
 
 do_configure[noexec] = "1"
 
@@ -36,13 +40,19 @@ do_install() {
         install -m 0755 ${B}/app/${APP}/gcc/${APP} ${D}${bindir}
     done
 
-    # install cmd files to /etc/rtklib/cmd/
-    install -d ${D}${sysconfdir}/rtklib/cmd
-    install -m 0644 ${WORKDIR}/base_m8t.cmd ${D}${sysconfdir}/rtklib/cmd/
-
     # copy data files to /etc/rtklib/data
     install -d ${D}${sysconfdir}/rtklib/data
     install -m 0644 ${S}/data/* ${D}${sysconfdir}/rtklib/data/
+
+    # install cmd files to /etc/rtklib/cmd/
+    install -d ${D}${sysconfdir}/rtklib/cmd
+    install -m 0644 ${WORKDIR}/*.cmd ${D}${sysconfdir}/rtklib/cmd/
+
+    ln -sf cmd/base_m8t.cmd  ${D}${sysconfdir}/rtklib/base.cmd
+
+    for RTKCONF in ${RTKCONFS}; do
+        install -m 0755 ${WORKDIR}/${RTKCONF} ${D}${sysconfdir}/rtklib
+    done
 }
 
 #CONFFILES_${PN} += "${sysconfdir}/default/rtkrcv.conf"
