@@ -48,11 +48,17 @@ do_install() {
     install -d ${D}${sysconfdir}/rtklib/cmd
     install -m 0644 ${WORKDIR}/*.cmd ${D}${sysconfdir}/rtklib/cmd/
 
-    ln -sf cmd/base_m8t.cmd  ${D}${sysconfdir}/rtklib/base.cmd
-
+    # deploy configuration files to /etc/rtklib
     for RTKCONF in ${RTKCONFS}; do
         install -m 0755 ${WORKDIR}/${RTKCONF} ${D}${sysconfdir}/rtklib
     done
+
+    # set default receiver
+    ln -sf cmd/base_m8t.cmd  ${D}${sysconfdir}/rtklib/base.cmd
+
+    # deploy systemd service definition
+    install -d ${D}${sysconfdir}/systemd/system
+    install -m 0644 ${WORKDIR}/rtkrcv.service ${D}${sysconfdir}/systemd/system
 }
 
 #CONFFILES_${PN} += "${sysconfdir}/default/rtkrcv.conf"
