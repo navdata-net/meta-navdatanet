@@ -19,6 +19,8 @@ SRC_URI = "git://github.com/rtklibexplorer/RTKLIB.git;branch=demo5 \
            file://rtkrcv.conf \
            file://rtkstart.sh \
            file://rtkstop.sh \
+           file://str2str.init \
+           file://str2str.default \
 "
 
 S = "${WORKDIR}/git"
@@ -69,15 +71,17 @@ do_install() {
     #install -d ${D}${sysconfdir}/systemd/system
     #install -m 0644 ${WORKDIR}/rtkrcv.service ${D}${sysconfdir}/systemd/system
 
-    # deploy System V startup file
+    # deploy System V startup files
     install -d ${D}${sysconfdir}/init.d
     install -m 755 ${WORKDIR}/rtkrcv.init ${D}${sysconfdir}/init.d/rtkrcv
+    install -m 755 ${WORKDIR}/str2str.init ${D}${sysconfdir}/init.d/str2str
 
     #deploy default options
     install -d ${D}${sysconfdir}/default
     install -m 755 ${WORKDIR}/rtkrcv.default ${D}${sysconfdir}/default/rtkrcv
+    install -m 755 ${WORKDIR}/str2str.default ${D}${sysconfdir}/default/str2str
 
 }
 
-CONFFILES_${PN} += "${sysconfdir}/default/rtkrcv"
+CONFFILES_${PN} += "${sysconfdir}/default/rtkrcv ${sysconfdir}/default/str2str"
 
