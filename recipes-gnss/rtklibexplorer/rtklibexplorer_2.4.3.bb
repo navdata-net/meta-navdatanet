@@ -14,6 +14,8 @@ SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/rtklibexplorer/RTKLIB.git;branch=demo5 \
            file://base_m8t.cmd \
            file://rtkrcv.service \
+           file://rtkrcv.init \
+           file://rtkrcv.default \
            file://rtkrcv.conf \
            file://rtkstart.sh \
            file://rtkstop.sh \
@@ -27,6 +29,13 @@ RTKCONFS = "rtkrcv.conf rtkstart.sh rtkstop.sh"
 do_configure[noexec] = "1"
 
 CFLAGS += "-I${S}/src"
+
+inherit update-rc.d
+INITSCRIPT_NAME = "rtkrcv"
+INITSCRIPT_PARAMS = "start 17 2 3 4 5 . stop 23 0 6 1 ."
+
+#inherit systemd
+#SYSTEMD_SERVICE_${PN} = "rtkrcv.service"
 
 do_compile() {
     for APP in ${APPS}; do
@@ -57,8 +66,18 @@ do_install() {
     ln -sf cmd/base_m8t.cmd  ${D}${sysconfdir}/rtklib/base.cmd
 
     # deploy systemd service definition
-    install -d ${D}${sysconfdir}/systemd/system
-    install -m 0644 ${WORKDIR}/rtkrcv.service ${D}${sysconfdir}/systemd/system
+    #install -d ${D}${sysconfdir}/systemd/system
+    #install -m 0644 ${WORKDIR}/rtkrcv.service ${D}${sysconfdir}/systemd/system
+
+    # deploy System V startup file
+    install -d ${D}${sysconfdir}/init.d
+    install -m 755 ${WORKDIR}/rtkrcv.init ${D}${sysconfdir}/init.d/rtkrcv
+
+    #deploy default options
+    install -d ${D}${sysconfdir}/default
+    install -m 755 ${WORKDIR}/rtkrcv.default ${D}${sysconfdir}/default/rtkrcv
+
 }
 
-#CONFFILES_${PN} += "${sysconfdir}/default/rtkrcv.conf"
+CONFFILES_${PN} += "${sysconfdir}/default/rtkrcv"
+

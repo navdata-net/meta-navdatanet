@@ -16,6 +16,8 @@ SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/charlesrwest/pylonGPS.git;protocol=https \
            file://caster.pylonCasterConfiguration \
            file://caster.service \
+           file://transceiver.init \
+           file://transceiver.default \
            file://fixes.patch \
            file://yocto.patch \
            file://navdatanet.patch \
@@ -37,6 +39,13 @@ inherit useradd
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "-d /home/pylon -r -m -s /bin/sh pylon"
 
+inherit update-rc.d
+INITSCRIPT_NAME = "transceiver_raw"
+INITSCRIPT_PARAMS = "start 25 2 3 4 5 . stop 15 0 6 1 ."
+
+#inherit systemd
+#SYSTEMD_SERVICE_${PN} = "caster.service"
+
 do_install() {
     install -d ${D}${bindir}
     for APP in ${APPS}; do
@@ -55,8 +64,18 @@ do_install() {
     install -m 0644 ${WORKDIR}/caster.pylonCasterConfiguration ${D}${sysconfdir}/pylon
 
     # deploy systemd service definition
-    install -d ${D}${sysconfdir}/systemd/system
-    install -m 0644 ${WORKDIR}/caster.service ${D}${sysconfdir}/systemd/system
+    #install -d ${D}${systemd_unitdir}/system
+    #install -m 0644 ${WORKDIR}/caster.service ${D}${systemd_unitdir}/system
+
+    # deploy System V startup file
+    install -d ${D}${sysconfdir}/init.d
+    install -m 755 ${WORKDIR}/transceiver.init ${D}${sysconfdir}/init.d/transceiver_raw
+
+    #deploy default options
+    install -d ${D}${sysconfdir}/default
+    install -m 755 ${WORKDIR}/transceiver.default ${D}${sysconfdir}/default/transceiver_raw
+
 }
 
-#CONFFILES_${PN} += "${sysconfdir}/default/rtkrcv.conf"
+CONFFILES_${PN} = "${sysconfdir}/default/transceiver_raw"
+
