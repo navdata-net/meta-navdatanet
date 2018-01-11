@@ -1,0 +1,1 @@
+8 1 * * * root find /tmp -type f -name "igu*" -mtime +1 -delete
