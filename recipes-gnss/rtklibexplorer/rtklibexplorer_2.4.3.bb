@@ -32,9 +32,9 @@ do_configure[noexec] = "1"
 
 CFLAGS += "-I${S}/src"
 
-inherit update-rc.d
-INITSCRIPT_NAME = "rtkrcv"
-INITSCRIPT_PARAMS = "start 17 2 3 4 5 . stop 23 0 6 1 ."
+#inherit update-rc.d
+#INITSCRIPT_NAME = "rtkrcv"
+#INITSCRIPT_PARAMS = "start 17 2 3 4 5 . stop 23 0 6 1 ."
 
 #inherit systemd
 #SYSTEMD_SERVICE_${PN} = "rtkrcv.service"

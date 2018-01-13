@@ -14,40 +14,41 @@ if [ -f /etc/default/$NAME ] ; then
         . /etc/default/$NAME
 fi
 
+do_start() {
+        echo -n "Starting $DESC: "
+        start-stop-daemon --start --quiet --pidfile $PID -n $NAME -x $DAEMON -m -b -- $DAEMON_OPTS
+        echo "$NAME."
+}
+
+do_stop() {
+        echo -n "Stopping $DESC: "
+        start-stop-daemon -K --quiet --pidfile $PID -n $NAME
+        [ -f $PID ] && rm -f $PID
+        echo "$NAME."
+}
+
+
 set -e
 
 cd /tmp
 
 case "$1" in
   start)
-        echo -n "Starting $DESC: "
-        start-stop-daemon --start --quiet --pidfile $PID \
-                -n $NAME -x $DAEMON -m -b -- $DAEMON_OPTS
-        echo "$NAME."
+        do_start
         ;;
   stop)
-        echo -n "Stopping $DESC: "
-        start-stop-daemon -K --quiet --pidfile $PID \
-                -n $NAME
-        [ -f $PID ] && rm -f $PID
-        echo "$NAME."
+        do_stop
         ;;
   restart|force-reload)
-        echo -n "Restarting $DESC: "
-        start-stop-daemon -K --quiet --pidfile $PID \
-                -n $NAME
-        [ -f $PID ] && rm -f $PID
+        do_stop
         sleep 1
-        start-stop-daemon --start --quiet --pidfile $PID \
-                -n $NAME -x $DAEMON -m -b -- $DAEMON_OPTS
-        echo "$NAME."
+        do_start
         ;;
   reload)
-      echo -n "Reloading $DESC configuration: "
-      start-stop-daemon --stop --signal HUP --quiet --pidfile $PID \
-          --exec $DAEMON
-      echo "$NAME."
-      ;;
+        echo -n "Reloading $DESC configuration: "
+        start-stop-daemon --stop --signal HUP --quiet --pidfile $PID --exec $DAEMON
+        echo "$NAME."
+        ;;
   *)
         N=/etc/init.d/$NAME
         echo "Usage: $N {start|stop|restart|force-reload}" >&2
@@ -58,3 +59,4 @@ esac
 cd "${CWD}"
 
 exit 0
+
