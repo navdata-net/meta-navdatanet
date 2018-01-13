@@ -39,9 +39,9 @@ inherit useradd
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "-d /home/pylon -r -m -s /bin/sh pylon"
 
-inherit update-rc.d
-INITSCRIPT_NAME = "transceiver_raw"
-INITSCRIPT_PARAMS = "start 25 2 3 4 5 . stop 15 0 6 1 ."
+#inherit update-rc.d
+#INITSCRIPT_NAME = "transceiver_raw"
+#INITSCRIPT_PARAMS = "start 25 2 3 4 5 . stop 15 0 6 1 ."
 
 #inherit systemd
 #SYSTEMD_SERVICE_${PN} = "caster.service"
