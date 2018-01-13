@@ -10,7 +10,7 @@ MYLOCATION="/tmp/location"
 
 [ -f /etc/default/transceiver_raw ] || {
   echo "/etc/default/transceiver_raw missing"
-  sleep 3
+  sleep 10
   exit 1
   }
 

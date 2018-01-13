@@ -1,0 +1,58 @@
+#!/bin/sh
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/iptables
+NAME=iptables
+DESC="iptables"
+RULES="/etc/iptables/rules.v4"
+
+do_start() {
+    if [ -e "${RULES}" ]; then
+        echo "Starting iptables service"
+        ${DAEMON}-restore < "${RULES}"
+    else
+        echo "No rules saved for iptables in ${RULES}"
+    fi
+}
+
+do_stop() {
+    echo "Stopping iptables service"
+    ${DAEMON} -F
+    ${DAEMON} -X
+    ${DAEMON} -t nat -F
+    ${DAEMON} -t nat -X
+    ${DAEMON} -t mangle -F
+    ${DAEMON} -t mangle -X
+    ${DAEMON} -P INPUT ACCEPT
+    ${DAEMON} -P FORWARD ACCEPT
+    ${DAEMON} -P OUTPUT ACCEPT
+}
+
+do_save() {
+    echo "Saving iptables rules"
+    ${DAEMON}-save > "${RULES}"
+}
+
+set -e
+
+case "$1" in
+    start)
+        do_start
+    ;;
+    stop)
+        do_stop
+    ;;
+    save)
+        do_save
+    ;;
+    restart)
+        do_stop
+        do_start
+    ;;
+    *)
+        echo "Usage: /etc/init.d/iptables {start|stop|restart|save}"
+        exit 1
+    ;;
+esac
+
+exit 0
+

@@ -57,7 +57,7 @@ class RTKRCVtelnet:
   RUNTIME=datetime.timedelta()
 
 
-  def __init__(self,password='admin',server='pylon.navdata.net',port=3130):
+  def __init__(self,password='admin',server='localhost',port=3130):
     self.PASSWORD=password
     self.SERVER=server
     self.PORT=port
@@ -140,6 +140,7 @@ if __name__ == "__main__":
     rrd.add('rtkrcv_dage',rcv.DIFFAGE,rcv.TIMESTAMP)
     rrd.add('rtkrcv_rtime',rcv.RUNTIME.total_seconds(),rcv.TIMESTAMP)
 
+  time.sleep(5)
   rrd=RRDcached()
   rcv=RTKRCVtelnet()
   rcv.send("status 1")

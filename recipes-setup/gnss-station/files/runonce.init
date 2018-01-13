@@ -1,0 +1,54 @@
+#!/bin/sh
+
+TODEL="/var/www/localhost/html/index.html"
+TEMPLATES="ntp.conf:/etc/ntp.conf"
+
+LOG="/tmp/runonce.log"
+TEMPLATEDIR="/etc/template"
+BOOTCFG="/boot/config.txt"
+
+REBOOT="false"
+
+for FILE in ${TODEL} ; do
+  echo "Deleting >${FILE}<" >>"${LOG}"
+  [ -f "${FILE}" ] && rm -f "${FILE}"
+  done
+
+for ENTRY in ${TEMPLATES} ; do
+  SRC="`echo ${ENTRY} | cut -d ':' -f 1`"
+  DST="`echo ${ENTRY} | cut -d ':' -f 2`"
+
+  echo "Trying template >${SRC}< for >${DST}<" >>"${LOG}"
+
+  [ -f "${TEMPLATEDIR}/${SRC}" ] && cat "${TEMPLATEDIR}/${SRC}" > "${DST}"
+
+  done
+
+grep '^#/dev/mmcblk0p1' /etc/fstab >/dev/null && {
+  echo "Started /etc/fstab." >>"${LOG}"
+  grep -v '^#/dev/mmcblk0p1' /etc/fstab >/tmp/fstab
+  echo '/dev/mmcblk0p1       /boot          auto       defaults,sync,noauto  0  0' >>/tmp/fstab
+  cat /tmp/fstab > /etc/fstab
+  rm -f /tmp/fstab
+  echo "Finished /etc/fstab." >>"${LOG}"
+  }
+
+echo "Mounting /boot" >>"${LOG}"
+mount /boot || exit 1
+echo "Mounted /boot" >>"${LOG}"
+
+[ -f "${BOOTCFG}" ] && {
+  echo "Started ${BOOTCFG}." >>"${LOG}"
+  grep 'dtoverlay=pps-gpio,gpiopin=4' "${BOOTCFG}" >/dev/null || {
+    echo 'dtoverlay=pps-gpio,gpiopin=4' >>"${BOOTCFG}"
+    REBOOT="TRUE"
+    }
+  echo "Finished ${BOOTCFG}." >>"${LOG}"
+  }
+
+echo "Dismounting /boot" >>"${LOG}"
+umount /boot || exit 1
+echo "Dismounted /boot" >>"${LOG}"
+
+[ "${REBOOT}" = "TRUE" ] && reboot
+

@@ -5,8 +5,6 @@ NAME=rrdcached
 DESC="rrdcached"
 PID=/run/$NAME.pid
 
-CWD="`pwd`"
-
 test -x $DAEMON || exit 0
 
 # Include defaults if available
@@ -14,9 +12,21 @@ if [ -f /etc/default/$NAME ] ; then
         . /etc/default/$NAME
 fi
 
-set -e
+DAEMON_OPTS="\
+  ${BASE_OPTIONS} \
+  ${NETWORK_OPTIONS} \
+  ${WRITE_TIMEOUT:+-w ${WRITE_TIMEOUT}} \
+  ${WRITE_JITTER:+-z ${WRITE_JITTER}} \
+  ${WRITE_THREADS:+-t ${WRITE_THREADS}} \
+  ${BASE_PATH:+-b ${BASE_PATH}} \
+  ${JOURNAL_PATH:+-j ${JOURNAL_PATH}} \
+  ${DAEMON_GROUP:+-G ${DAEMON_GROUP}} \
+  ${DAEMON_USER:+-U ${DAEMON_USER}} \
+  -p ${PIDFILE} \
+  ${SOCKFILE:+${SOCKGROUP:+-s ${SOCKGROUP}} ${SOCKMODE:+-m ${SOCKMODE}} -l unix:${SOCKFILE}} \
+  "
 
-cd /tmp
+set -e
 
 case "$1" in
   start)
@@ -52,7 +62,5 @@ case "$1" in
         exit 1
         ;;
 esac
-
-cd "${CWD}"
 
 exit 0
