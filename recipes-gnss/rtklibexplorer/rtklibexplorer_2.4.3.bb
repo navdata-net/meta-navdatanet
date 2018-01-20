@@ -16,7 +16,8 @@ SRC_URI = "git://github.com/rtklibexplorer/RTKLIB.git;branch=demo5 \
            file://rtkrcv.service \
            file://rtkrcv.init \
            file://rtkrcv.default \
-           file://rtkrcv.conf \
+           file://base.conf \
+           file://nettest.conf \
            file://rtkstart.sh \
            file://rtkstop.sh \
            file://str2str.init \
@@ -26,7 +27,7 @@ SRC_URI = "git://github.com/rtklibexplorer/RTKLIB.git;branch=demo5 \
 S = "${WORKDIR}/git"
 
 APPS = "pos2kml str2str rnx2rtkp convbin rtkrcv"
-RTKCONFS = "rtkrcv.conf rtkstart.sh rtkstop.sh"
+RTKCONFS = "rtkstart.sh rtkstop.sh base.conf nettest.conf"
 
 do_configure[noexec] = "1"
 
@@ -63,6 +64,7 @@ do_install() {
     for RTKCONF in ${RTKCONFS}; do
         install -m 0755 ${WORKDIR}/${RTKCONF} ${D}${sysconfdir}/rtklib
     done
+    ln -sf base.conf ${D}${sysconfdir}/rtklib/rtkrcv.conf
 
     # set default receiver
     ln -sf cmd/base_m8t.cmd  ${D}${sysconfdir}/rtklib/base.cmd
