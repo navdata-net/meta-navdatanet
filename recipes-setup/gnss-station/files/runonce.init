@@ -10,9 +10,6 @@ REBOOT="false"
 
 echo "powersave" > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
 
-grep rover /etc/hosts >/dev/null || echo '172.16.11.192 rover' >>/etc/hosts
-grep base /etc/hosts >/dev/null || echo '172.16.4.2 base' >>/etc/hosts
-
 for FILE in ${TODEL} ; do
   echo "Deleting >${FILE}<" >>"${LOG}"
   [ -f "${FILE}" ] && rm -f "${FILE}"
