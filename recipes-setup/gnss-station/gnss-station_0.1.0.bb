@@ -10,6 +10,7 @@ RDEPENDS_${PN} = "python"
 
 SRC_URI = "file://LICENSE \
            file://runonce.init \
+           file://iptables.init \
            file://webroot \
            file://rrdcached.init \
            file://rrdcached.default \
@@ -43,6 +44,7 @@ do_install() {
     install -m 0755 ${WORKDIR}/runonce.init ${D}${sysconfdir}/rcS.d/S99runonce
     install -d ${D}${sysconfdir}/init.d
     install -m 0755 ${WORKDIR}/rrdcached.init ${D}${sysconfdir}/init.d/rrdcached
+    install -m 0755 ${WORKDIR}/iptables.init ${D}${sysconfdir}/init.d/iptables
 
     #deploy default options
     install -d ${D}${sysconfdir}/default
@@ -75,13 +77,6 @@ do_install() {
     
 }
 
-FILES_${PN} = "/var/www/localhost/html/* /usr/local/bin/* /etc/iptables/rules.v4 /etc/rcS.d/S99runonce /etc/init.d/rrdcached /etc/template/* /etc/default/rrdcached /etc/default/volatiles/rrdgraph /etc/cron.d/rrdgraph /etc/cron.d/rtkrcv /var/lib/rrdcached/*"
+FILES_${PN} = "/var/www/localhost/html/* /usr/local/bin/* /etc/iptables/rules.v4 /etc/rcS.d/S99runonce /etc/init.d/* /etc/template/* /etc/default/rrdcached /etc/default/volatiles/rrdgraph /etc/cron.d/rrdgraph /etc/cron.d/rtkrcv /var/lib/rrdcached/*"
 CONFFILES_${PN} = "${sysconfdir}/default/rrdcached"
-
-pkg_postinst_${PN}() {
-#!/bin/sh
-grep '/usr/bin/rtkrcv' $D/etc/inittab >/dev/null || echo '9:2345:respawn:/usr/bin/rtkrcv -s -o /etc/rtklib/rtkrcv.conf -m 3134 -p 3130 > /dev/tty9' >>$D/etc/inittab
-grep '/usr/local/bin/pushrawstream' $D/etc/inittab >/dev/null || echo '10:2345:respawn:/usr/local/bin/pushrawstream >/dev/tty10' >>$D/etc/inittab
-grep '/usr/local/bin/rtknavstatus' $D/etc/inittab >/dev/null || echo '12:2345:respawn:/usr/bin/python /usr/local/bin/rtknavstatus >/dev/tty12' >>$D/etc/inittab
-}
 

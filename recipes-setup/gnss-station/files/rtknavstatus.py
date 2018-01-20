@@ -1,10 +1,13 @@
 #!/usr/bin/python
 
+import os
 import sys
 import socket
 import time
 import datetime
 import telnetlib
+import psutil
+import math
 
 class RRDcached:
 
@@ -139,14 +142,35 @@ if __name__ == "__main__":
     rrd.add('rtkrcv_bline',rcv.BASELINEFLT,rcv.TIMESTAMP)
     rrd.add('rtkrcv_dage',rcv.DIFFAGE,rcv.TIMESTAMP)
     rrd.add('rtkrcv_rtime',rcv.RUNTIME.total_seconds(),rcv.TIMESTAMP)
+    rrd.add('rtkrcv_chz',psutil.cpu_freq().current,rcv.TIMESTAMP)
+    rrd.add('rtkrcv_cpu',psutil.cpu_percent(),rcv.TIMESTAMP)
+    rrd.add('rtkrcv_mem',psutil.virtual_memory().available,rcv.TIMESTAMP)
+
+    os.write(tty,'\033[H')
+    os.write(tty,'%.4s: %-15s %6s %24s\n' % (NIC,IP,'',time.strftime('%d.%m.%Y %H:%M:%S %Z')))
+
+    try:
+      error = math.sqrt(float(rcv.ROVER.FLTSX)**2 + float(rcv.ROVER.FLTSY)**2 + float(rcv.ROVER.FLTSZ)**2)
+      rrd.add('rtkrcv_err',error,rcv.TIMESTAMP)
+      os.write(tty,'RVR Sats: %2s  LLH: %11.8f  %12.8f  %7.2f\n' % (rcv.ROVER.SATS,float(rcv.ROVER.LAT),float(rcv.ROVER.LON),float(rcv.ROVER.HGHT)))
+      os.write(tty,'BSE Sats: %2s  LLH: %11.8f  %12.8f  %7.2f\n' % (rcv.BASE.SATS,float(rcv.BASE.LAT),float(rcv.BASE.LON),float(rcv.BASE.HGHT)))
+    except:
+      pass
+
 
   time.sleep(5)
+  NIC = dict ((k,v) for k,v in psutil.net_if_stats().items() if v.mtu < 65536).keys()[0]
+  IP=[v for v in psutil.net_if_addrs()[NIC] if v.family==2][0].address
+  tty = os.open('/dev/tty4',os.O_RDWR)
+  os.write(tty,'\033[?25l')
+  os.write(tty,chr(27) + '[2J')
   rrd=RRDcached()
   rcv=RTKRCVtelnet()
   rcv.send("status 1")
   rcv.readStatus(2,updateRRD)
-  rcv.close()
   print("Latitude: "+rcv.ROVER.LAT)
   print("Longitutde: "+rcv.ROVER.LON)
   print("Height: "+rcv.ROVER.HGHT)
+  rcv.close()
+  os.close(tty)
 
