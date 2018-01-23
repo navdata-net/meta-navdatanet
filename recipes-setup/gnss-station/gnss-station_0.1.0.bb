@@ -74,6 +74,7 @@ do_install() {
     install -m 0755 ${WORKDIR}/rrdgraph.sh ${D}/usr/local/bin/rrdgraph
     install -m 0755 ${WORKDIR}/rtknavstatus.py ${D}/usr/local/bin/rtknavstatus
     install -m 0755 ${WORKDIR}/pushrawstream.sh ${D}/usr/local/bin/pushrawstream
+    install -m 0755 ${WORKDIR}/ubx2rtcm.sh ${D}/usr/local/bin/ubx2rtcm
     
 }
 
