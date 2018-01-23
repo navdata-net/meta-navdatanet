@@ -18,7 +18,7 @@ for PERIOD in ${PERIODS} ; do
     FIELDS="`echo ${TABLE} | cut -d ';' -f 2 | tr ',' ' '`"
 
     echo "    <h3>${SECTION}</h3>" >>"${STATFILE}"
-    echo '    <table border="1" cellpadding="2" cellspacing="2" width="100%">' >>"${STATFILE}"
+    echo '    <table border="1" cellpadding="2" cellspacing="2">' >>"${STATFILE}"
     echo '      <tbody>' >>"${STATFILE}"
 
     TABLE_HEAD="        <tr>\n"
