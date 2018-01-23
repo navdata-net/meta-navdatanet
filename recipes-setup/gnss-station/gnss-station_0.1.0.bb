@@ -70,7 +70,7 @@ do_install() {
     install -d ${D}/usr/local/bin
     install -m 0755 ${WORKDIR}/create_rrddb.sh ${D}/usr/local/bin/create_rrddb
     install -m 0755 ${WORKDIR}/rrdbackup.sh ${D}/usr/local/bin/rrdbackup
-    install -m 0755 ${WORKDIR}/rrdrestore.sh ${D}/usr/local/bin/restore
+    install -m 0755 ${WORKDIR}/rrdrestore.sh ${D}/usr/local/bin/rrdrestore
     install -m 0755 ${WORKDIR}/rrdgraph.sh ${D}/usr/local/bin/rrdgraph
     install -m 0755 ${WORKDIR}/rtknavstatus.py ${D}/usr/local/bin/rtknavstatus
     install -m 0755 ${WORKDIR}/pushrawstream.sh ${D}/usr/local/bin/pushrawstream
