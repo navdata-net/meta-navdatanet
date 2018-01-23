@@ -56,20 +56,26 @@ export NLAT="`rrdtool graph /tmp/test.png --daemon unix:/var/run/rrdcached.sock 
 export NLON="`rrdtool graph /tmp/test.png --daemon unix:/var/run/rrdcached.sock  --start -24hour 'DEF:data=/var/lib/rrdcached/db/rtkrcv_lon.rrd:Lon:AVERAGE' PRINT:data:AVERAGE:%.8lf|awk 'NR>1'`"
 export NHGHT="`rrdtool graph /tmp/test.png --daemon unix:/var/run/rrdcached.sock  --start -24hour 'DEF:data=/var/lib/rrdcached/db/rtkrcv_hght.rrd:Hght:AVERAGE' PRINT:data:AVERAGE:%.8lf|awk 'NR>1'`"
 
-killTransceiver() {
-  PROCESSES="`ps | grep /usr/bin/transceiver | grep -v grep | cut -d ' ' -f 1`"
+killProcesses() {
+  PROCNAME="${1:-/usr/bin/transceiver}"
+  PROCESSES="`grep -H "^${PROCNAME}" /proc/*/cmdline | cut -d '/' -f 3`"
   PROCESSES="`echo ${PROCESSES}`"
   for PROCESS in ${PROCESSES} ; do
-    echo "Killing transceiver process #${PROCESS}"
+    echo "Killing >${PROCNAME}< process #${PROCESS}"
     kill ${PROCESS}
     done
+  }
+
+killAll() {
+  killProcesses '/usr/bin/transceiver'
+  killProcesses '/usr/bin/str2str'
   exit
   }
 
 stopTransmission() {
   echo "Deleting ${LOCATION}"
   [ -f ${LOCATION}  ] && rm -f ${LOCATION}
-  killTransceiver
+  killAll
   }
 
 [ "${NLAT}" = "nan" ] && stopTransmission
@@ -89,7 +95,6 @@ expr ${NHGHT} \< ${MIN} >/dev/null && stopTransmission
 echo "Writing new ${LOCATION}"
 echo -e LAT=\"${NLAT}\"\\nLON=\"${NLON}\"\\nHGHT=\"${NHGHT}\"\\n > ${LOCATION}
 
-[ "${NLAT}" != "${LAT}" ] && killTransceiver
-[ "${NLON}" != "${LON}" ] && killTransceiver
-[ "${NHGHT}" != "${HGHT}" ] && killTransceiver
-
+[ "${NLAT}" != "${LAT}" ] && killAll
+[ "${NLON}" != "${LON}" ] && killAll
+[ "${NHGHT}" != "${HGHT}" ] && killAll
