@@ -159,7 +159,7 @@ if __name__ == "__main__":
 
 
   time.sleep(5)
-  NIC = dict ((k,v) for k,v in psutil.net_if_stats().items() if v.mtu < 65536).keys()[0]
+  NIC = dict ((k,v) for k,v in psutil.net_if_stats().items() if (v.mtu < 65536) and (v.isup == True)).keys()[0]
   IP=[v for v in psutil.net_if_addrs()[NIC] if v.family==2][0].address
   tty = os.open('/dev/tty4',os.O_RDWR)
   os.write(tty,'\033[?25l')
