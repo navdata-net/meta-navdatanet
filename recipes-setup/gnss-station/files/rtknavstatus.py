@@ -176,7 +176,7 @@ if __name__ == "__main__":
     rrd.add('rtkrcv_sgl',str(rcv.ROVER.SGLX) + ":" + str(rcv.ROVER.SGLY) + ":" + str(rcv.ROVER.SGLZ),rcv.TIMESTAMP)
 
     os.write(tty,'\033[H')
-    os.write(tty,'%.4s: %-15s %6s %24s\n' % (NIC,IP,'',time.strftime('%d.%m.%Y %H:%M:%S %Z')))
+    os.write(tty,'%.5s: %-15s %5s %24s\n' % (NIC,IP,'',time.strftime('%d.%m.%Y %H:%M:%S %Z')))
 
     try:
       error = math.sqrt(float(rcv.ROVER.FLTSX)**2 + float(rcv.ROVER.FLTSY)**2 + float(rcv.ROVER.FLTSZ)**2)
