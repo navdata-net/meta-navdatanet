@@ -10,7 +10,7 @@ import psutil
 import math
 
 
-STATEMAP={ "-":0 , "single":1 , "dgps":2 , "float":3 , "fixed":4 }
+STATEMAP={ "-":0 , "single":1 , "dgps":2 , "float":3 , "fix":4 }
 
 
 def get_ip_addresses(family):
