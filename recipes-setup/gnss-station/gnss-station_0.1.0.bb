@@ -14,6 +14,7 @@ SRC_URI = "file://LICENSE \
            file://webroot \
            file://rrdcached.init \
            file://rrdcached.default \
+           file://rrd_rtkrcv.default \
            file://create_rrddb.sh \
            file://rrdbackup.sh \
            file://rrdrestore.sh \
@@ -22,6 +23,7 @@ SRC_URI = "file://LICENSE \
            file://rrdgraph.cron \
            file://rtkrcv.cron \
            file://pushrawstream.sh \
+           file://raw2rtcm.sh \
            file://rtknavstatus.py \
            file://rules.v4 \
            file://ntp.conf.template \
@@ -49,6 +51,7 @@ do_install() {
     #deploy default options
     install -d ${D}${sysconfdir}/default
     install -m 0644 ${WORKDIR}/rrdcached.default ${D}${sysconfdir}/default/rrdcached
+    install -m 0644 ${WORKDIR}/rrd_rtkrcv.default ${D}${sysconfdir}/default/rrd_rtkrcv
 
     install -d ${D}${sysconfdir}/default/volatiles
     install -m 0644 ${WORKDIR}/rrdgraph.volatiles ${D}${sysconfdir}/default/volatiles/rrdgraph
@@ -74,10 +77,10 @@ do_install() {
     install -m 0755 ${WORKDIR}/rrdgraph.sh ${D}/usr/local/bin/rrdgraph
     install -m 0755 ${WORKDIR}/rtknavstatus.py ${D}/usr/local/bin/rtknavstatus
     install -m 0755 ${WORKDIR}/pushrawstream.sh ${D}/usr/local/bin/pushrawstream
-    install -m 0755 ${WORKDIR}/ubx2rtcm.sh ${D}/usr/local/bin/ubx2rtcm
+    install -m 0755 ${WORKDIR}/raw2rtcm.sh ${D}/usr/local/bin/raw2rtcm
     
 }
 
-FILES_${PN} = "/var/www/localhost/html/* /usr/local/bin/* /etc/iptables/rules.v4 /etc/rcS.d/S99runonce /etc/init.d/* /etc/template/* /etc/default/rrdcached /etc/default/volatiles/rrdgraph /etc/cron.d/rrdgraph /etc/cron.d/rtkrcv /var/lib/rrdcached/*"
-CONFFILES_${PN} = "${sysconfdir}/default/rrdcached"
+FILES_${PN} = "/var/www/localhost/html/* /usr/local/bin/* /etc/iptables/rules.v4 /etc/rcS.d/S99runonce /etc/init.d/* /etc/template/* /etc/default/* /etc/cron.d/rrdgraph /etc/cron.d/rtkrcv /var/lib/rrdcached/*"
+CONFFILES_${PN} = "${sysconfdir}/default/rrdcached ${sysconfdir}/default/rrd_rtkrcv"
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TABLES="System;cpu:CPU,mem:RAMfree Location;lat:Latitude,lon:Longitude ;hght:Height,err:Error Satellites;rsat:LocalSATS,bsat:RemoteSATS Distance;bline:StationDistance,dage:DiffdataAge Resolution;vsat:MatchingSATS,arr:ARratio"
+TABLES="System;cpu:CPU,mem:RAMfree Location;lat:Latitude,lon:Longitude ;hght:Height,stat:Status Satellites;rsat:LocalSATS,bsat:RemoteSATS Resolution;vsat:MatchingSATS,arr:ARratio Distance;bline:StationDistance,dage:DiffdataAge"
 PERIODS="30m:30minutes 1d:1day 2w:2weeks 2y:2years"
 
 

@@ -9,6 +9,18 @@ import telnetlib
 import psutil
 import math
 
+
+STATEMAP={ "-":0 , "single":1 , "dgps":2 , "float":3 , "fixed":4 }
+
+
+def get_ip_addresses(family):
+  for interface, snics in psutil.net_if_addrs().items():
+    if interface != 'lo':
+      for snic in snics:
+        if snic.family == family:
+          yield (interface, snic.address)
+
+
 class RRDcached:
 
   def __init__(self,server='localhost',port=42217):
@@ -34,9 +46,12 @@ class RTKsite:
   SATS = 0; READS = 0
   LAT = 0; LON = 0; HGHT = 0
   VELX = 0; VELY = 0; VELZ = 0
+  SGLX = 0; SGLY = 0; SGLZ = 0
   FLTX = 0; FLTY = 0; FLTZ = 0
   FLTSX = 0; FLTSY = 0; FLTSZ = 0
-  TIME=datetime.datetime(1,1,1)
+  FIXX = 0; FIXY = 0; FIXZ = 0
+  FIXSX = 0; FIXSY = 0; FIXSZ = 0
+  TIME = datetime.datetime(1,1,1)
 
   def setLocation(self,llh):
     self.LAT,self.LON,self.HGHT=llh.split(',')
@@ -44,11 +59,20 @@ class RTKsite:
   def setVelocity(self,xyz):
     self.VELX,self.VELY,self.VELZ=xyz.split(',')
 
+  def setSingle(self,xyz):
+    self.SGLX,self.SGLY,self.SGLZ=xyz.split(',')
+
   def setFloat(self,xyz):
     self.FLTX,self.FLTY,self.FLTZ=xyz.split(',')
 
   def setFloatS(self,xyz):
     self.FLTSX,self.FLTSY,self.FLTSZ=xyz.split(',')
+
+  def setFix(self,xyz):
+    self.FIXX,self.FIXY,self.FIXZ=xyz.split(',')
+
+  def setFixS(self,xyz):
+    self.FIXSX,self.FIXSY,self.FIXSZ=xyz.split(',')
 
 
 
@@ -59,7 +83,6 @@ class RTKRCVtelnet:
 
   RUNTIME=datetime.timedelta()
 
-
   def __init__(self,password='admin',server='localhost',port=3130):
     self.PASSWORD=password
     self.SERVER=server
@@ -68,6 +91,7 @@ class RTKRCVtelnet:
     self.RTKRCV.read_until("password: ")
     self.RTKRCV.write(self.PASSWORD + "\r\n")
     self.RTKRCV.read_until("rtkrcv> ",2)
+    self.STATE = 0
 
   def send(self,command):
     self.RTKRCV.write(command+"\r\n")
@@ -102,7 +126,7 @@ class RTKRCVtelnet:
         if FIELD == "# of input data rover": self.ROVER.READS=VALUE
         if FIELD == "# of input data base": self.BASE.READS=VALUE
         if FIELD == "# of input data corr": self.CORRECTIONS=VALUE
-        if FIELD == "solution status": self.STATUS=VALUE
+        if FIELD == "solution status": self.STATUS=VALUE ; self.STATE=STATEMAP[VALUE.lower()]
         if FIELD == "time of receiver clock rover": self.ROVER.TIME=VALUE
         if FIELD == "time sys offset (ns)": self.TIMEOFFSET=VALUE
         if FIELD == "solution interval (s)": self.SOLINTERVAL=VALUE
@@ -112,10 +136,13 @@ class RTKRCVtelnet:
         if FIELD == "# of satellites base": self.BASE.SATS=VALUE
         if FIELD == "# of valid satellites": self.VALIDSATS=VALUE
         if FIELD == "GDOP/PDOP/HDOP/VDOP": self.DOP=VALUE
+        if FIELD == "pos xyz single (m) rover": self.ROVER.setSingle(VALUE)
         if FIELD == "pos llh single (deg,m) rover": self.ROVER.setLocation(VALUE)
         if FIELD == "vel enu (m/s) rover": self.ROVER.setVelocity(VALUE)
         if FIELD == "pos xyz float (m) rover": self.ROVER.setFloat(VALUE)
         if FIELD == "pos xyz float std (m) rover": self.ROVER.setFloatS(VALUE)
+        if FIELD == "pos xyz fixed (m) rover": self.ROVER.setFix(VALUE)
+        if FIELD == "pos xyz fixed std (m) rover": self.ROVER.setFixS(VALUE)
         if FIELD == "pos llh (deg,m) base": self.BASE.setLocation(VALUE)
         if FIELD == "# of average single pos base": self.AVGBASEPOS=VALUE
         if FIELD == "vel enu (m/s) base": self.BASE.setVelocity(VALUE)
@@ -145,6 +172,8 @@ if __name__ == "__main__":
     rrd.add('rtkrcv_chz',psutil.cpu_freq().current,rcv.TIMESTAMP)
     rrd.add('rtkrcv_cpu',psutil.cpu_percent(),rcv.TIMESTAMP)
     rrd.add('rtkrcv_mem',psutil.virtual_memory().available,rcv.TIMESTAMP)
+    rrd.add('rtkrcv_stat',rcv.STATE,rcv.TIMESTAMP)
+    rrd.add('rtkrcv_sgl',str(rcv.ROVER.SGLX) + ":" + str(rcv.ROVER.SGLY) + ":" + str(rcv.ROVER.SGLZ),rcv.TIMESTAMP)
 
     os.write(tty,'\033[H')
     os.write(tty,'%.4s: %-15s %6s %24s\n' % (NIC,IP,'',time.strftime('%d.%m.%Y %H:%M:%S %Z')))
@@ -159,8 +188,9 @@ if __name__ == "__main__":
 
 
   time.sleep(5)
-  NIC = dict ((k,v) for k,v in psutil.net_if_stats().items() if (v.mtu < 65536) and (v.isup == True)).keys()[0]
-  IP=[v for v in psutil.net_if_addrs()[NIC] if v.family==2][0].address
+  LINK = list(get_ip_addresses(socket.AF_INET))[0]
+  NIC = LINK[0]
+  IP = LINK[1]
   tty = os.open('/dev/tty4',os.O_RDWR)
   os.write(tty,'\033[?25l')
   os.write(tty,chr(27) + '[2J')

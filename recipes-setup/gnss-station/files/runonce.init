@@ -111,7 +111,7 @@ echo "Dismounted /boot" >>"${LOG}"
 grep 'auto wlan0' /etc/network/interfaces >/dev/null || echo 'auto wlan0' >>/etc/network/interfaces
 
 grep '/usr/bin/rtkrcv' /etc/inittab >/dev/null || echo '8:2345:respawn:/usr/bin/rtkrcv -s -o /etc/rtklib/rtkrcv.conf -m 3134 -p 3130 >/dev/tty8 2>/dev/tty8' >>/etc/inittab
-grep '/usr/local/bin/ubx2rtcm' /etc/inittab >/dev/null || echo '9:2345:respawn:/usr/local/bin/ubx2rtcm >/dev/tty9 2>/dev/tty9' >>/etc/inittab
+grep '/usr/local/bin/raw2rtcm' /etc/inittab >/dev/null || echo '9:2345:respawn:/usr/local/bin/raw2rtcm >/dev/tty9 2>/dev/tty9' >>/etc/inittab
 grep '/usr/local/bin/pushrawstream pylon.navdata.net' /etc/inittab >/dev/null || echo '10:2345:respawn:/usr/local/bin/pushrawstream pylon.navdata.net >/dev/tty10 2>/dev/tty10' >>/etc/inittab
 grep '/usr/local/bin/pushrawstream www.pylongps.com' /etc/inittab >/dev/null || echo '11:2345:respawn:/usr/local/bin/pushrawstream www.pylongps.com >dev/tty11 2>/dev/tty11' >>/etc/inittab
 grep '/usr/local/bin/rtknavstatus' /etc/inittab >/dev/null || echo '12:2345:respawn:/usr/bin/python /usr/local/bin/rtknavstatus >/dev/tty12 2>/dev/tty12' >>/etc/inittab

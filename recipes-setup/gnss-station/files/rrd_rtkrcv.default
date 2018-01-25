@@ -1,0 +1,4 @@
+DBs="CHZ:CPUhz:G:A:Hz CPU:CPU:G:A:%% MEM:MemFree:G:A:kB"
+DBs="${DBs} LAT:Lat:G:A:° LON:Lon:G:A:° HGHT:Hght:G:A:m FLTSX:FloatX:G:A:m FLTSY:FloatY:G:A:m FLTSZ:FloatZ:G:A:m ERR:Error:G:A:m"
+DBs="${DBs} RSAT:RovSats:G:A: BSAT:BasSats:G:A: VSAT:ValSats:G:A: ARR:ARratio:G:A: BLINE:Baseline:G:A:m DAGE:DiffAge:G:X:s RTIME:Runtime:C:N:s SNR:SNR:G:A:db"
+DBs="${DBs} SGL:X,Y,Z:G:A:m,m,m OFF:off:G:A:m STAT:Status:G:A: SOL:Lon,Lat,Hght:G:A:°,°,m"
