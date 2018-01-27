@@ -9,6 +9,10 @@ export DBDIR="/var/lib/rrdcached/db"
 export MIN="0.000000000"
 export LOCATION="/tmp/location"
 
+RTKPID="`pidof rtkrcv`" && for I in ${RTKPID} ; do chrt -r -a -p 30 $I ; done
+RTKPID="`pidof str2str`" && for I in ${RTKPID} ; do chrt -r -a -p 20 $I ; done
+RTKPID="`pidof transceiver`" && for I in ${RTKPID} ; do chrt -r -a -p 10 $I ; done
+
 #[ -f /var/lib/rrdcached/db/rtkrcv_hght.rrd ] || /usr/local/bin/create_rrddb
 
 RRD_GRAPH='rrdtool graph --daemon unix:/var/run/rrdcached.sock ${TMPDIR}/rtkrcv_${DBl}_${DUR}.png -a PNG --end now --start end-${DUR} --alt-autoscale "DEF:${DB}=${DBDIR}/rtkrcv_${DBl}.rrd:${DESC}:${AGGR}:step=1" "LINE1:${DB}#ff0000:${DESC}" "GPRINT:${DB}:AVERAGE:Average\: %.8lf${UNIT}"'
@@ -49,6 +53,7 @@ for ENTRY in ${DBs} ; do
     COMMAND="`echo ${RRD_GRAPH} | envsubst`"
     echo ${COMMAND}
     eval ${COMMAND}
+    sleep 1
     done
   done
 
