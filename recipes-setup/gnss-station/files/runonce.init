@@ -77,7 +77,7 @@ set_bootconfig() {
 BOOTCFG="/boot/config.txt"
 [ -f "${BOOTCFG}" ] && {
   echo "Started ${BOOTCFG}."  >>"${LOG}"
-  set_bootconfig 'arm_freq=600'
+  set_bootconfig 'arm_freq=700'
   #set_bootconfig 'arm_freq_min=100'
   set_bootconfig 'temp_limit=75'
   set_bootconfig 'initial_turbo=20'
