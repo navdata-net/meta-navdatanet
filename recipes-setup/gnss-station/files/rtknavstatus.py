@@ -15,10 +15,9 @@ STATEMAP={ "-":0 , "single":1 , "dgps":2 , "float":3 , "fix":4 }
 
 def get_ip_addresses(family):
   for interface, snics in psutil.net_if_addrs().items():
-    if interface != 'lo':
-      for snic in snics:
-        if snic.family == family:
-          yield (interface, snic.address)
+    for snic in snics:
+      if snic.family == family:
+        yield (interface, snic.address)
 
 
 class RRDcached:
@@ -176,7 +175,7 @@ if __name__ == "__main__":
     rrd.add('rtkrcv_sgl',str(rcv.ROVER.SGLX) + ":" + str(rcv.ROVER.SGLY) + ":" + str(rcv.ROVER.SGLZ),rcv.TIMESTAMP)
 
     os.write(tty,'\033[H')
-    os.write(tty,'%.5s: %-15s %5s %24s\n' % (NIC,IP,'',time.strftime('%d.%m.%Y %H:%M:%S %Z')))
+    os.write(tty,'%-5s: %-15s %5s %24s\n' % (NIC,IP,'',time.strftime('%d.%m.%Y %H:%M:%S %Z')))
 
     try:
       error = math.sqrt(float(rcv.ROVER.FLTSX)**2 + float(rcv.ROVER.FLTSY)**2 + float(rcv.ROVER.FLTSZ)**2)
@@ -188,9 +187,9 @@ if __name__ == "__main__":
 
 
   time.sleep(5)
-  LINK = list(get_ip_addresses(socket.AF_INET))[0]
-  NIC = LINK[0]
-  IP = LINK[1]
+  LINK = dict(get_ip_addresses(socket.AF_INET))
+  del LINK['lo']
+  NIC,IP = LINK.popitem()
   tty = os.open('/dev/tty4',os.O_RDWR)
   os.write(tty,'\033[?25l')
   os.write(tty,chr(27) + '[2J')
