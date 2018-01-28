@@ -60,8 +60,9 @@ do_install() {
     done
 
     # deploy configuration files to /etc/pylon
-    install -d ${D}${sysconfdir}/pylon
-    install -m 0644 ${WORKDIR}/caster.pylonCasterConfiguration ${D}${sysconfdir}/pylon
+    install -d -m 0750 ${D}${sysconfdir}/pylon
+    install -m 0640 ${WORKDIR}/caster.pylonCasterConfiguration ${D}${sysconfdir}/pylon
+    chgrp -R pylon ${D}${sysconfdir}/pylon
 
     # deploy systemd service definition
     #install -d ${D}${systemd_unitdir}/system

@@ -77,7 +77,7 @@ set_bootconfig() {
 BOOTCFG="/boot/config.txt"
 [ -f "${BOOTCFG}" ] && {
   echo "Started ${BOOTCFG}."  >>"${LOG}"
-  set_bootconfig 'arm_freq=700'
+  set_bootconfig 'arm_freq=600'
   #set_bootconfig 'arm_freq_min=100'
   set_bootconfig 'temp_limit=75'
   set_bootconfig 'initial_turbo=20'
@@ -110,10 +110,10 @@ echo "Dismounted /boot" >>"${LOG}"
 
 grep 'auto wlan0' /etc/network/interfaces >/dev/null || echo 'auto wlan0' >>/etc/network/interfaces
 
-grep '/usr/bin/rtkrcv' /etc/inittab >/dev/null || echo '8:2345:respawn:/usr/bin/rtkrcv -s -o /etc/rtklib/rtkrcv.conf -m 3134 -p 3130 >/dev/tty8 2>/dev/tty8' >>/etc/inittab
-grep '/usr/local/bin/raw2rtcm' /etc/inittab >/dev/null || echo '9:2345:respawn:/usr/local/bin/raw2rtcm >/dev/tty9 2>/dev/tty9' >>/etc/inittab
-grep '/usr/local/bin/pushrawstream pylon.navdata.net' /etc/inittab >/dev/null || echo '10:2345:respawn:/usr/local/bin/pushrawstream pylon.navdata.net >/dev/tty10 2>/dev/tty10' >>/etc/inittab
-grep '/usr/local/bin/pushrawstream www.pylongps.com' /etc/inittab >/dev/null || echo '11:2345:respawn:/usr/local/bin/pushrawstream www.pylongps.com >dev/tty11 2>/dev/tty11' >>/etc/inittab
+grep '/usr/bin/rtkrcv' /etc/inittab >/dev/null || echo '8:2345:respawn:su - rtkrcv -c "/usr/bin/rtkrcv -s -o /etc/rtklib/rtkrcv.conf -m 3134 -p 3130" >/dev/tty8 2>/dev/tty8' >>/etc/inittab
+grep '/usr/local/bin/raw2rtcm' /etc/inittab >/dev/null || echo '9:2345:respawn:su - rtkrcv -c "/usr/local/bin/raw2rtcm" >/dev/tty9 2>/dev/tty9' >>/etc/inittab
+grep '/usr/local/bin/pushrawstream pylon.navdata.net' /etc/inittab >/dev/null || echo '10:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream pylon.navdata.net" >/dev/tty10 2>/dev/tty10' >>/etc/inittab
+grep '/usr/local/bin/pushrawstream www.pylongps.com' /etc/inittab >/dev/null || echo '11:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream www.pylongps.com" >dev/tty11 2>/dev/tty11' >>/etc/inittab
 grep '/usr/local/bin/rtknavstatus' /etc/inittab >/dev/null || echo '12:2345:respawn:/usr/bin/python /usr/local/bin/rtknavstatus >/dev/tty12 2>/dev/tty12' >>/etc/inittab
 init q
 

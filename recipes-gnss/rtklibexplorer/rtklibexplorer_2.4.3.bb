@@ -27,11 +27,15 @@ SRC_URI = "git://github.com/rtklibexplorer/RTKLIB.git;branch=demo5 \
 S = "${WORKDIR}/git"
 
 APPS = "pos2kml str2str rnx2rtkp convbin rtkrcv"
-RTKCONFS = "rtkstart.sh rtkstop.sh base.conf nettest.conf"
 
 do_configure[noexec] = "1"
 
 CFLAGS += "-I${S}/src"
+
+inherit useradd
+
+USERADD_PACKAGES = "${PN}"
+USERADD_PARAM_${PN} = "-d /home/rtkrcv -r -m -s /bin/sh rtkrcv"
 
 #inherit update-rc.d
 #INITSCRIPT_NAME = "rtkrcv"
@@ -52,18 +56,21 @@ do_install() {
         install -m 0755 ${B}/app/${APP}/gcc/${APP} ${D}${bindir}
     done
 
+    install -d -m 0750 ${D}${sysconfdir}/rtklib
+
     # copy data files to /etc/rtklib/data
-    install -d ${D}${sysconfdir}/rtklib/data
-    install -m 0644 ${S}/data/* ${D}${sysconfdir}/rtklib/data/
+    install -d -m 0750 ${D}${sysconfdir}/rtklib/data
+    install -m 0640 ${S}/data/* ${D}${sysconfdir}/rtklib/data/
 
     # install cmd files to /etc/rtklib/cmd/
-    install -d ${D}${sysconfdir}/rtklib/cmd
-    install -m 0644 ${WORKDIR}/*.cmd ${D}${sysconfdir}/rtklib/cmd/
+    install -d -m 0750 ${D}${sysconfdir}/rtklib/cmd
+    install -m 0640 ${WORKDIR}/*.cmd ${D}${sysconfdir}/rtklib/cmd/
 
     # deploy configuration files to /etc/rtklib
-    for RTKCONF in ${RTKCONFS}; do
-        install -m 0755 ${WORKDIR}/${RTKCONF} ${D}${sysconfdir}/rtklib
-    done
+    install -m 0750 ${WORKDIR}/rtkstart.sh ${D}${sysconfdir}/rtklib
+    install -m 0750 ${WORKDIR}/rtkstop.sh ${D}${sysconfdir}/rtklib
+    install -m 0640 ${WORKDIR}/base.conf ${D}${sysconfdir}/rtklib
+    install -m 0640 ${WORKDIR}/nettest.conf ${D}${sysconfdir}/rtklib
     ln -sf base.conf ${D}${sysconfdir}/rtklib/rtkrcv.conf
 
     # set default receiver
@@ -83,6 +90,7 @@ do_install() {
     install -m 755 ${WORKDIR}/rtkrcv.default ${D}${sysconfdir}/default/rtkrcv
     install -m 755 ${WORKDIR}/str2str.default ${D}${sysconfdir}/default/str2str
 
+    chgrp -R rtkrcv ${D}${sysconfdir}/rtklib
 }
 
 CONFFILES_${PN} += "${sysconfdir}/default/rtkrcv ${sysconfdir}/default/str2str"
