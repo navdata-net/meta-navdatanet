@@ -6,7 +6,7 @@ LOCFILE="/tmp/location"
 [ -f "${CFGFILE}" ] || {
     echo "Creating default configuration file."
     echo 'RAWFORMAT="ubx"' > "${CFGFILE}"
-    echo 'MSGS="1002(1),1006(10),1010(1),1019(1),1020(1),1045(1)"' >> "${CFGFILE}"
+    echo 'MSGS="1002(1),1006(10),1010(1)"' >> "${CFGFILE}"
     }
 
 echo "Reading configuration."
