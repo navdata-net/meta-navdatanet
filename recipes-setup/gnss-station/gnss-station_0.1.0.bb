@@ -21,10 +21,14 @@ SRC_URI = "file://LICENSE \
            file://rrdgraph.sh \
            file://rrdgraph.volatiles \
            file://rrdgraph.cron \
+           file://locupdate.sh \
+           file://locupdate.cron \
            file://rtkrcv.cron \
            file://pushrawstream.sh \
            file://raw2rtcm.sh \
            file://rtknavstatus.py \
+           file://rtksolstatus.py \
+           file://ecef2llh.py \
            file://rules.v4 \
            file://ntp.conf.template \
            "
@@ -68,6 +72,7 @@ do_install() {
     #cronjob for creating statistics images
     install -d ${D}${sysconfdir}/cron.d
     install -m 0644 ${WORKDIR}/rrdgraph.cron ${D}${sysconfdir}/cron.d/rrdgraph
+    install -m 0644 ${WORKDIR}/locupdate.cron ${D}${sysconfdir}/cron.d/locupdate
     install -m 0644 ${WORKDIR}/rtkrcv.cron ${D}${sysconfdir}/cron.d/rtkrcv
 
     install -d ${D}/usr/local/bin
@@ -75,12 +80,15 @@ do_install() {
     install -m 0755 ${WORKDIR}/rrdbackup.sh ${D}/usr/local/bin/rrdbackup
     install -m 0755 ${WORKDIR}/rrdrestore.sh ${D}/usr/local/bin/rrdrestore
     install -m 0755 ${WORKDIR}/rrdgraph.sh ${D}/usr/local/bin/rrdgraph
+    install -m 0755 ${WORKDIR}/locupdate.sh ${D}/usr/local/bin/locupdate
+    install -m 0755 ${WORKDIR}/ecef2llh.py ${D}/usr/local/bin/rtknavstatus
     install -m 0755 ${WORKDIR}/rtknavstatus.py ${D}/usr/local/bin/rtknavstatus
+    install -m 0755 ${WORKDIR}/rtksolstatus.py ${D}/usr/local/bin/rtksolstatus
     install -m 0755 ${WORKDIR}/pushrawstream.sh ${D}/usr/local/bin/pushrawstream
     install -m 0755 ${WORKDIR}/raw2rtcm.sh ${D}/usr/local/bin/raw2rtcm
     
 }
 
-FILES_${PN} = "/var/www/localhost/html/* /usr/local/bin/* /etc/iptables/rules.v4 /etc/rcS.d/S99runonce /etc/init.d/* /etc/template/* /etc/default/* /etc/cron.d/rrdgraph /etc/cron.d/rtkrcv /var/lib/rrdcached/*"
+FILES_${PN} = "/var/www/localhost/html/* /usr/local/bin/* /etc/iptables/rules.v4 /etc/rcS.d/S99runonce /etc/init.d/* /etc/template/* /etc/default/* /etc/cron.d/* /var/lib/rrdcached/*"
 CONFFILES_${PN} = "${sysconfdir}/default/rrdcached ${sysconfdir}/default/rrd_rtkrcv"
 
