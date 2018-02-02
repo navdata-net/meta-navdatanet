@@ -1,0 +1,1 @@
+*/2 * * * * root /usr/local/bin/locupdate > /tmp/locupdate.out
