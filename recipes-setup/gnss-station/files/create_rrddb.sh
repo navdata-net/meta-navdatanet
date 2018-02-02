@@ -3,7 +3,6 @@
 CFG="/etc/default/rrd_rtkrcv"
 
 [ -f "${CFG}" ] || exit 1
-
 source "${CFG}"
 
 DBDIR="/var/lib/rrdcached/db"

@@ -16,8 +16,8 @@
           <th align='center'>RAMfree</th>
         </tr>
         <tr>
-          <td align='center'><img alt='CPU graph' src='volatile/rtkrcv_cpu_2y.png'></td>
-          <td align='center'><img alt='RAMfree graph' src='volatile/rtkrcv_mem_2y.png'></td>
+          <td align='center'><img alt='CPU graph' src='volatile/rtkrcv_sys_CPU_2y.png'></td>
+          <td align='center'><img alt='RAMfree graph' src='volatile/rtkrcv_sys_MemFree_2y.png'></td>
         </tr>
     </table>
     <h3>Location</h3>
@@ -28,8 +28,8 @@
           <th align='center'>Longitude</th>
         </tr>
         <tr>
-          <td align='center'><img alt='Latitude graph' src='volatile/rtkrcv_lat_2y.png'></td>
-          <td align='center'><img alt='Longitude graph' src='volatile/rtkrcv_lon_2y.png'></td>
+          <td align='center'><img alt='Latitude graph' src='volatile/rtkrcv_sglllh_Lat_2y.png'></td>
+          <td align='center'><img alt='Longitude graph' src='volatile/rtkrcv_sglllh_Lon_2y.png'></td>
         </tr>
     </table>
     <h3></h3>
@@ -40,8 +40,32 @@
           <th align='center'>Status</th>
         </tr>
         <tr>
-          <td align='center'><img alt='Height graph' src='volatile/rtkrcv_hght_2y.png'></td>
-          <td align='center'><img alt='Status graph' src='volatile/rtkrcv_stat_2y.png'></td>
+          <td align='center'><img alt='Height graph' src='volatile/rtkrcv_sglllh_Hght_2y.png'></td>
+          <td align='center'><img alt='Status graph' src='volatile/rtkrcv_stat_Status_2y.png'></td>
+        </tr>
+    </table>
+    <h3>Solution</h3>
+    <table border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <th align='center'>Latitude</th>
+          <th align='center'>Longitude</th>
+        </tr>
+        <tr>
+          <td align='center'><img alt='Latitude graph' src='volatile/rtkrcv_solllh_Lat_2y.png'></td>
+          <td align='center'><img alt='Longitude graph' src='volatile/rtkrcv_solllh_Lon_2y.png'></td>
+        </tr>
+    </table>
+    <h3></h3>
+    <table border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <th align='center'>Height</th>
+          <th align='center'>ARratio</th>
+        </tr>
+        <tr>
+          <td align='center'><img alt='Height graph' src='volatile/rtkrcv_solllh_Hght_2y.png'></td>
+          <td align='center'><img alt='ARratio graph' src='volatile/rtkrcv_arr_ARratio_2y.png'></td>
         </tr>
     </table>
     <h3>Satellites</h3>
@@ -52,8 +76,8 @@
           <th align='center'>RemoteSATS</th>
         </tr>
         <tr>
-          <td align='center'><img alt='LocalSATS graph' src='volatile/rtkrcv_rsat_2y.png'></td>
-          <td align='center'><img alt='RemoteSATS graph' src='volatile/rtkrcv_bsat_2y.png'></td>
+          <td align='center'><img alt='LocalSATS graph' src='volatile/rtkrcv_sat_RovSats_2y.png'></td>
+          <td align='center'><img alt='RemoteSATS graph' src='volatile/rtkrcv_sat_BasSats_2y.png'></td>
         </tr>
     </table>
     <h3>Resolution</h3>
@@ -61,11 +85,11 @@
       <tbody>
         <tr>
           <th align='center'>MatchingSATS</th>
-          <th align='center'>ARratio</th>
+          <th align='center'>DiffdataAge</th>
         </tr>
         <tr>
-          <td align='center'><img alt='MatchingSATS graph' src='volatile/rtkrcv_vsat_2y.png'></td>
-          <td align='center'><img alt='ARratio graph' src='volatile/rtkrcv_arr_2y.png'></td>
+          <td align='center'><img alt='MatchingSATS graph' src='volatile/rtkrcv_sat_ValSats_2y.png'></td>
+          <td align='center'><img alt='DiffdataAge graph' src='volatile/rtkrcv_dage_DiffAge_2y.png'></td>
         </tr>
     </table>
     <h3>Distance</h3>
@@ -73,11 +97,11 @@
       <tbody>
         <tr>
           <th align='center'>StationDistance</th>
-          <th align='center'>DiffdataAge</th>
+          <th align='center'>Error</th>
         </tr>
         <tr>
-          <td align='center'><img alt='StationDistance graph' src='volatile/rtkrcv_bline_2y.png'></td>
-          <td align='center'><img alt='DiffdataAge graph' src='volatile/rtkrcv_dage_2y.png'></td>
+          <td align='center'><img alt='StationDistance graph' src='volatile/rtkrcv_bline_Baseline_2y.png'></td>
+          <td align='center'><img alt='Error graph' src='volatile/rtkrcv_err_Error_2y.png'></td>
         </tr>
     </table>
   </body>

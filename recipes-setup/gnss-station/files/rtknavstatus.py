@@ -155,27 +155,22 @@ class RTKRCVtelnet:
 if __name__ == "__main__":
 
   def updateRRD(rcv):
-    rrd.add('rtkrcv_lat',rcv.ROVER.LAT,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_lon',rcv.ROVER.LON,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_hght',rcv.ROVER.HGHT,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_fltsx',rcv.ROVER.FLTSX,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_fltsy',rcv.ROVER.FLTSY,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_fltsz',rcv.ROVER.FLTSZ,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_rsat',rcv.ROVER.SATS,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_bsat',rcv.BASE.SATS,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_vsat',rcv.VALIDSATS,rcv.TIMESTAMP)
+    rrd.add('rtkrcv_sys',str(psutil.cpu_freq().current) + ":" + str(psutil.cpu_percent()) + ":" + str(psutil.virtual_memory().available),rcv.TIMESTAMP)
+    rrd.add('rtkrcv_sglllh',str(rcv.ROVER.LAT) + ":" + str(rcv.ROVER.LON) + ":" + str(rcv.ROVER.HGHT),rcv.TIMESTAMP)
+    rrd.add('rtkrcv_sglxyz',str(rcv.ROVER.SGLX) + ":" + str(rcv.ROVER.SGLY) + ":" + str(rcv.ROVER.SGLZ),rcv.TIMESTAMP)
+    rrd.add('rtkrcv_fltxyz',str(rcv.ROVER.FLTSX) + ":" + str(rcv.ROVER.FLTSY) + ":" + str(rcv.ROVER.FLTSZ),rcv.TIMESTAMP)
+    rrd.add('rtkrcv_sat',str(rcv.ROVER.SATS) + ":" + str(rcv.BASE.SATS) + ":" + str(rcv.VALIDSATS),rcv.TIMESTAMP)
     rrd.add('rtkrcv_arr',rcv.ARRATIO,rcv.TIMESTAMP)
     rrd.add('rtkrcv_bline',rcv.BASELINEFLT,rcv.TIMESTAMP)
     rrd.add('rtkrcv_dage',rcv.DIFFAGE,rcv.TIMESTAMP)
     rrd.add('rtkrcv_rtime',rcv.RUNTIME.total_seconds(),rcv.TIMESTAMP)
-    rrd.add('rtkrcv_chz',psutil.cpu_freq().current,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_cpu',psutil.cpu_percent(),rcv.TIMESTAMP)
-    rrd.add('rtkrcv_mem',psutil.virtual_memory().available,rcv.TIMESTAMP)
     rrd.add('rtkrcv_stat',rcv.STATE,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_sgl',str(rcv.ROVER.SGLX) + ":" + str(rcv.ROVER.SGLY) + ":" + str(rcv.ROVER.SGLZ),rcv.TIMESTAMP)
+
+    if rcv.STATE > 0 :
+      rrd.add('rtkrcv_solxyz',str(rcv.ROVER.SGLX) + ":" + str(rcv.ROVER.SGLY) + ":" + str(rcv.ROVER.SGLZ),rcv.TIMESTAMP)
 
     os.write(tty,'\033[H')
-    os.write(tty,'%-5s: %-15s %5s %24s\n' % (NIC,IP,'',time.strftime('%d.%m.%Y %H:%M:%S %Z')))
+    os.write(tty,'%-5s: %-15s %.5s %24s\n' % (NIC,IP,'{:^5}'.format(rcv.STATUS),time.strftime('%d.%m.%Y %H:%M:%S %Z')))
 
     try:
       error = math.sqrt(float(rcv.ROVER.FLTSX)**2 + float(rcv.ROVER.FLTSY)**2 + float(rcv.ROVER.FLTSZ)**2)
