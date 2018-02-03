@@ -18,7 +18,7 @@ RTKPID="`pidof transceiver`" && for I in ${RTKPID} ; do chrt -r -a -p 10 $I ; do
 
 #[ -f /var/lib/rrdcached/db/rtkrcv_hght.rrd ] || /usr/local/bin/create_rrddb
 
-RRD_GRAPH='rrdtool graph --daemon unix:/var/run/rrdcached.sock ${TMPDIR}/rtkrcv_${DBl}_${ITEM}_${DUR}.png -a PNG --end now --start end-${DUR} --alt-autoscale "DEF:${DB}=${DBDIR}/rtkrcv_${DBl}.rrd:${ITEM}:${AGGR}:step=1" "LINE1:${DB}#ff0000:${DESC}" "GPRINT:${DB}:AVERAGE:Average\: %.8lf${UNIT}"'
+RRD_GRAPH='rrdtool graph --daemon unix:/var/run/rrdcached.sock ${TMPDIR}/rtkrcv_${DBl}_${ITEM}_${DUR}.png -a PNG --end now --start end+1min-${DUR} --alt-autoscale "DEF:${DB}=${DBDIR}/rtkrcv_${DBl}.rrd:${ITEM}:${AGGR}:step=1" "LINE1:${DB}#ff0000:${DESC}" "GPRINT:${DB}:AVERAGE:Average\: %.8lf${UNIT}"'
 
 #echo FLUSHALL | socat - UNIX-CONNECT:/var/run/rrdcached.sock
 #sleep 10
@@ -62,7 +62,7 @@ for ENTRY in ${DBs} ; do
       export DUR
       COMMAND="`echo ${RRD_GRAPH} | envsubst`"
       echo ${COMMAND}
-      eval ${COMMAND}
+      eval ${COMMAND} &
       sleep 1
       done
     done
