@@ -19,17 +19,22 @@ source "${CFG}"
 
 NOW="`date +%s`"
 
-for QLTY in sol sgl ; do
-  export QLTY
-  DTIM="`rrdtool first --daemon ${RRD} ${DBDIR}/rtkrcv_${QLTY}llh.rrd`"
-  DAGE="`expr ${NOW} - ${DTIM}`"
-  echo "Age of >${QLTY}<: `expr ${DAGE} / 60`m"
-  [ "${DAGE}" -gt "${MINSOL}" ] && break
-  done
+QLTY="sgl"
+SOLVALS="`rrdtool fetch ${DBDIR}/rtkrcv_solllh.rrd --daemon ${RRD} -a --end now --start end+1min-30m -r 1s AVERAGE | tail -n +3 | grep -v nan | wc -l`"
+[ "${SOLVALS}" -gt 300 ] && QLTY="sol"
+export QLTY
 
 WINDOW="30m"
-[ "${DAGE}" -gt "${BARRD}" ] && WINDOW="1d"
-[ "${DAGE}" -gt "${BARRW}" ] && WINDOW="2w"
+
+#for QLTY in sol sgl ; do
+#  DTIM="`rrdtool first --daemon ${RRD} ${DBDIR}/rtkrcv_${QLTY}llh.rrd`"
+#  DAGE="`expr ${NOW} - ${DTIM}`"
+#  echo "Age of >${QLTY}<: `expr ${DAGE} / 60`m"
+#  [ "${DAGE}" -gt "${MINSOL}" ] && break
+#  done
+
+#[ "${DAGE}" -gt "${BARRD}" ] && WINDOW="1d"
+#[ "${DAGE}" -gt "${BARRW}" ] && WINDOW="2w"
 
 echo "Choosing >${QLTY}< for window >${WINDOW}<."
 
