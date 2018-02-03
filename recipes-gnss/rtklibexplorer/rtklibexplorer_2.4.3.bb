@@ -35,7 +35,7 @@ CFLAGS += "-I${S}/src"
 inherit useradd
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "-d /home/rtkrcv -r -m -s /bin/sh rtkrcv"
+USERADD_PARAM_${PN} = "-d /home/rtkrcv -G dialout -r -m -s /bin/sh rtkrcv"
 
 #inherit update-rc.d
 #INITSCRIPT_NAME = "rtkrcv"
