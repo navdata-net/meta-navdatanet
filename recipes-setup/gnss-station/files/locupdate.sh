@@ -33,7 +33,7 @@ WINDOW="30m"
 
 echo "Choosing >${QLTY}< for window >${WINDOW}<."
 
-TEMP="`rrdtool graph /tmp/test.png --daemon ${RRD} --start -${WINDOW} DEF:lat=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Lat:AVERAGE DEF:lon=${DBDIR}/rtkrcv_sglllh.rrd:Lon:AVERAGE DEF:hght=${DBDIR}/rtkrcv_sglllh.rrd:Hght:AVERAGE PRINT:lat:AVERAGE:%.8lf PRINT:lon:AVERAGE:%.8lf PRINT:hght:AVERAGE:%.8lf | awk 'NR>1'`"
+TEMP="`rrdtool graph /tmp/test.png --daemon ${RRD} --start -${WINDOW} DEF:lat=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Lat:AVERAGE DEF:lon=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Lon:AVERAGE DEF:hght=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Hght:AVERAGE PRINT:lat:AVERAGE:%.8lf PRINT:lon:AVERAGE:%.8lf PRINT:hght:AVERAGE:%.8lf | awk 'NR>1'`"
 
 export NLAT="`echo ${TEMP} | cut -d ' ' -f 1`"
 export NLON="`echo ${TEMP} | cut -d ' ' -f 2`"
