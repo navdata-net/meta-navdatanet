@@ -175,8 +175,8 @@ if __name__ == "__main__":
     try:
       error = math.sqrt(float(rcv.ROVER.FLTSX)**2 + float(rcv.ROVER.FLTSY)**2 + float(rcv.ROVER.FLTSZ)**2)
       rrd.add('rtkrcv_err',error,rcv.TIMESTAMP)
-      os.write(tty,'RVR Sats: %2s  LLH: %11.8f  %12.8f  %7.2f\n' % (rcv.ROVER.SATS,float(rcv.ROVER.LAT),float(rcv.ROVER.LON),float(rcv.ROVER.HGHT)))
-      os.write(tty,'BSE Sats: %2s  LLH: %11.8f  %12.8f  %7.2f\n' % (rcv.BASE.SATS,float(rcv.BASE.LAT),float(rcv.BASE.LON),float(rcv.BASE.HGHT)))
+      os.write(tty,'LVL Sats: %2s  LLH: %11.8f  %12.8f  %7.2f\n' % (rcv.ROVER.SATS,float(rcv.ROVER.LAT),float(rcv.ROVER.LON),float(rcv.ROVER.HGHT)))
+      os.write(tty,'RMT Sats: %2s  LLH: %11.8f  %12.8f  %7.2f\n' % (rcv.BASE.SATS,float(rcv.BASE.LAT),float(rcv.BASE.LON),float(rcv.BASE.HGHT)))
     except:
       pass
 
