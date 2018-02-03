@@ -26,6 +26,7 @@ SRC_URI = "file://LICENSE \
            file://rtkrcv.cron \
            file://pushrawstream.sh \
            file://raw2rtcm.sh \
+           file://raw2rtcm.default \
            file://rtknavstatus.py \
            file://rtksolstatus.py \
            file://ecef2llh.py \
@@ -54,6 +55,7 @@ do_install() {
 
     #deploy default options
     install -d ${D}${sysconfdir}/default
+    install -m 0644 ${WORKDIR}/raw2rtcm.default ${D}${sysconfdir}/default/raw2rtcm
     install -m 0644 ${WORKDIR}/rrdcached.default ${D}${sysconfdir}/default/rrdcached
     install -m 0644 ${WORKDIR}/rrd_rtkrcv.default ${D}${sysconfdir}/default/rrd_rtkrcv
 
