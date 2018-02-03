@@ -53,8 +53,8 @@ for ENTRY in ${DBs} ; do
   for ITEM in ${ITEMS} ; do
 
     DESC="${ITEM}"
-    UNIT="`echo ${UNITS} | cut -d ',' -f ${I}`"
     I=$(($I + 1))
+    UNIT="`echo ${UNITS} | cut -d ',' -f ${I}`"
 
     export DB DBl DESC ITEM TYPE AGGR UNIT
 
@@ -63,7 +63,7 @@ for ENTRY in ${DBs} ; do
       COMMAND="`echo ${RRD_GRAPH} | envsubst`"
       echo ${COMMAND}
       eval ${COMMAND}
-      #sleep 1
+      sleep 1
       done
     done
   done
