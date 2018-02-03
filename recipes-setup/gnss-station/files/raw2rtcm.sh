@@ -4,9 +4,8 @@ CFGFILE="/etc/default/raw2rtcm"
 LOCFILE="/tmp/location"
 
 [ -f "${CFGFILE}" ] || {
-    echo "Creating default configuration file."
-    echo 'RAWFORMAT="ubx"' > "${CFGFILE}"
-    echo 'MSGS="1002(1),1006(10),1010(1)"' >> "${CFGFILE}"
+    echo "Configuration file >${CFGFILE}< missing."
+    exit 1
     }
 
 echo "Reading configuration."
