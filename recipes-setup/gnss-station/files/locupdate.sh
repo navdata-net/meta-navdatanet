@@ -56,7 +56,7 @@ killProcesses() {
 
 killAll() {
   killProcesses '/usr/bin/transceiver'
-  killProcesses '/usr/bin/str2str'
+  #killProcesses '/usr/bin/str2str'
   exit
   }
 
