@@ -1,10 +1,11 @@
 DBs="SYS:CPUhz,CPU,MemFree:G:A:Hz,%%,kB"
 DBs="${DBs} SGLLLH:Lat,Lon,Hght:G:A:°,°,m SOLLLH:Lat,Lon,Hght:G:A:°,°,m"
 DBs="${DBs} SGLXYZ:X,Y,Z:G:A:m,m,m SOLXYZ:X,Y,Z:G:A:m,m,m"
-DBs="${DBs} FLTXYZ:FloatX,FloatY,FloatZ:G:A:m,m,m"
+#DBs="${DBs} FLTXYZ:FloatX,FloatY,FloatZ:G:A:m,m,m"
 DBs="${DBs} SAT:RovSats,BasSats,ValSats:G:A:"
-DBs="${DBs} ARR:ARratio:G:A: BLINE:Baseline:G:A:m DAGE:DiffAge:G:X:s RTIME:Runtime:C:N:s SNR:SNR:G:A:db"
-DBs="${DBs} ERR:Error:G:A:m OFF:off:G:A:m STAT:Status:G:A:"
+DBs="${DBs} STAT:Status:G:A: ARR:ARratio:G:A: DAGE:DiffAge:G:X:s SNR:SNR:G:A:db"
+DBs="${DBs} BLINE:Baseline:G:A:m RTIME:Runtime:C:N:s"
+DBs="${DBs} ERR:Error:G:A:m OFF:off:G:A:m"
 
 export RRDCACHED_ADDRESS="unix:/var/run/rrdcached.sock"
 
