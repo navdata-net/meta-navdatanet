@@ -42,11 +42,12 @@ class RTKMONtelnet:
     self.SERVER=server
     self.PORT=port
     self.RTKRCV = telnetlib.Telnet(self.SERVER, self.PORT)
-    LINE = self.RTKRCV.read_until("\r")
+    LINE = self.RTKRCV.read_until("\n")
 
   def readStatus(self,callback=None):
     while True:
-      LINE = self.RTKRCV.read_until("\n\r")
+      LINE = self.RTKRCV.read_until("\n")
+      LINE = LINE.strip()
 
       self.TIMESTAMP=(datetime.datetime.strptime(LINE.split(".",1)[0] + " UTC",'%Y/%m/%d %H:%M:%S %Z') - datetime.datetime(1970,1,1)).total_seconds()
       DATA=LINE.split()
