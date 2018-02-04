@@ -1,0 +1,23 @@
+--- a/src/rtksvr.c
++++ b/src/rtksvr.c
+@@ -325,6 +325,19 @@ static int decoderaw(rtksvr_t *svr, int index)
+             nav=&svr->rtcm[index].nav;
+             sat=svr->rtcm[index].ephsat;
+         }
++        else if (index==2&&svr->format[index]==STRFMT_RTCM3&&svr->format[1]==STRFMT_UBX) {
++            index=1;
++            ret=input_rtcm3(svr->rtcm+index,svr->buff[2][i]);
++            obs=&svr->rtcm[index].obs;
++            nav=&svr->rtcm[index].nav;
++            sat=svr->rtcm[index].ephsat;
++            if (ret>0) updatesvr(svr,ret,obs,nav,sat,sbsmsg,index,fobs);
++            index=2;
++            ret=input_rtcm3(svr->rtcm+index,svr->buff[index][i]);
++            obs=&svr->rtcm[index].obs;
++            nav=&svr->rtcm[index].nav;
++            sat=svr->rtcm[index].ephsat;
++        }
+         else if (svr->format[index]==STRFMT_RTCM3) {
+             ret=input_rtcm3(svr->rtcm+index,svr->buff[index][i]);
+             obs=&svr->rtcm[index].obs;
+

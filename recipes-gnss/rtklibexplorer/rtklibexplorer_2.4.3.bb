@@ -22,6 +22,7 @@ SRC_URI = "git://github.com/rtklibexplorer/RTKLIB.git;branch=demo5 \
            file://rtkstop.sh \
            file://str2str.init \
            file://str2str.default \
+           file://navdatanet.patch \
 "
 
 S = "${WORKDIR}/git"
