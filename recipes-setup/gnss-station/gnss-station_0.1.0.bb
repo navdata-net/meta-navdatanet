@@ -27,6 +27,7 @@ SRC_URI = "file://LICENSE \
            file://pushrawstream.sh \
            file://raw2rtcm.sh \
            file://raw2rtcm.default \
+           file://loc2rtcm.sh \
            file://rtknavstatus.py \
            file://rtksolstatus.py \
            file://ecef2llh.py \
@@ -88,6 +89,7 @@ do_install() {
     install -m 0755 ${WORKDIR}/rtksolstatus.py ${D}/usr/local/bin/rtksolstatus
     install -m 0755 ${WORKDIR}/pushrawstream.sh ${D}/usr/local/bin/pushrawstream
     install -m 0755 ${WORKDIR}/raw2rtcm.sh ${D}/usr/local/bin/raw2rtcm
+    install -m 0755 ${WORKDIR}/loc2rtcm.sh ${D}/usr/local/bin/loc2rtcm
     
 }
 
