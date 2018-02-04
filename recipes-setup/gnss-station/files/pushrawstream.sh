@@ -6,13 +6,13 @@ MYLOCATION="/tmp/location"
 
 [ -f "${MYLOCATION}" ] || {
   echo "No location file. Waiting..."
-  sleep 10
+  sleep 60
   exit 1
   }
 
 [ -f /etc/default/transceiver_raw ] || {
   echo "/etc/default/transceiver_raw missing"
-  sleep 10
+  sleep 60
   exit 1
   }
 
