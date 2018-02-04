@@ -74,6 +74,13 @@ set_bootconfig() {
     }
   }
 
+CMDLINE="/boot/cmdline.txt"
+[ -f "${CMDLINE}" ] && {
+  grep "serial" "${CMDLINE}" >/dev/null && {
+    echo "dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 rootwait elevator=deadline fbcon=map:10 fbcon=font:ProFont6x11 consoleblank=0 logo.nologo" > "${CMDLINE}"
+    }
+  }
+
 BOOTCFG="/boot/config.txt"
 [ -f "${BOOTCFG}" ] && {
   echo "Started ${BOOTCFG}."  >>"${LOG}"
@@ -106,16 +113,41 @@ echo "Dismounted /boot" >>"${LOG}"
   echo "Finished rrd DB creation"
   }
 
-[ "${REBOOT}" = "TRUE" ] && reboot
+[ "${REBOOT}" = "TRUE" ] && {
+  chgrp -R rtkrcv /etc/rtklib
+  find /etc/rtklib -type d -exec chmod 750 \{} \;
+  find /etc/rtklib -type f -exec chmod 640 \{} \;
+  reboot
+  }
 
 grep 'auto wlan0' /etc/network/interfaces >/dev/null || echo 'auto wlan0' >>/etc/network/interfaces
 
-grep '/usr/local/bin/pushrawstream www.pylongps.com' /etc/inittab >/dev/null || echo '7:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream www.pylongps.com" >dev/tty7 2>/dev/tty7' >>/etc/inittab
-grep '/usr/local/bin/pushrawstream pylon.navdata.net' /etc/inittab >/dev/null || echo '8:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream pylon.navdata.net" >/dev/tty8 2>/dev/tty8' >>/etc/inittab
-grep '/usr/bin/rtkrcv' /etc/inittab >/dev/null || echo '9:2345:respawn:su - rtkrcv -c "/usr/bin/rtkrcv -s -o /etc/rtklib/rtkrcv.conf -m 3134 -p 3130" >/dev/tty9 2>/dev/tty9' >>/etc/inittab
-grep '/usr/local/bin/raw2rtcm' /etc/inittab >/dev/null || echo '10:2345:respawn:su - rtkrcv -c "/usr/local/bin/raw2rtcm" >/dev/tty10 2>/dev/tty10' >>/etc/inittab
-grep '/usr/local/bin/rtknavstatus' /etc/inittab >/dev/null || echo '11:2345:respawn:/usr/bin/python /usr/local/bin/rtknavstatus >/dev/tty11 2>/dev/tty11' >>/etc/inittab
-grep '/usr/local/bin/rtksolstatus' /etc/inittab >/dev/null || echo '12:2345:respawn:/usr/bin/python /usr/local/bin/rtksolstatus >/dev/tty12 2>/dev/tty12' >>/etc/inittab
+grep '/usr/bin/rtkrcv' /etc/inittab >/dev/null || cat <<EOF >/etc/inittab
+id:5:initdefault:
+si::sysinit:/etc/init.d/rcS
+~:S:wait:/sbin/sulogin
+
+l0:0:wait:/etc/init.d/rc 0
+l1:1:wait:/etc/init.d/rc 1
+l2:2:wait:/etc/init.d/rc 2
+l3:3:wait:/etc/init.d/rc 3
+l4:4:wait:/etc/init.d/rc 4
+l5:5:wait:/etc/init.d/rc 5
+l6:6:wait:/etc/init.d/rc 6
+z6:6:respawn:/sbin/sulogin
+
+2:12345:respawn:/sbin/getty 38400 tty2
+
+5:2345:respawn:su - rtkrcv -c "/usr/local/bin/raw2rtcm" >/dev/tty5 2>/dev/tty5
+6:2345:respawn:su - rtkrcv -c "/usr/bin/rtkrcv -s -o /etc/rtklib/rtkrcv.conf -m 3134 -p 3130" >/dev/tty6 2>/dev/tty6
+7:2345:respawn:/usr/bin/python /usr/local/bin/rtknavstatus >/dev/tty7 2>/dev/tty7
+8:2345:respawn:/usr/bin/python /usr/local/bin/rtksolstatus >/dev/tty8 2>/dev/tty8
+
+9:2345:respawn:su - rtkrcv -c "/usr/local/bin/loc2rtcm" >/dev/tty9 2>/dev/tty9
+11:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream www.pylongps.com" >dev/tty11 2>/dev/tty11
+12:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream pylon.navdata.net" >/dev/tty12 2>/dev/tty12
+EOF
+
 init q
 
 chvt 4
