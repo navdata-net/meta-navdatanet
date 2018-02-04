@@ -1,10 +1,10 @@
 #!/bin/sh
 
 CFGFILE="/etc/default/raw2rtcm"
-LOCFILE="/tmp/location"
 
 [ -f "${CFGFILE}" ] || {
     echo "Configuration file >${CFGFILE}< missing."
+    sleep 30
     exit 1
     }
 
@@ -13,17 +13,5 @@ source "${CFGFILE}"
 echo "Source data format: >${RAWFORMAT}<"
 echo "RTCM messages: >${MSGS}<"
 
-[ -f "${LOCFILE}" ] || {
-    echo "Station location not yet determined. Restarting after 20 seconds..."
-    sleep 20
-    exit
-    }
-
-echo "Reading configuration"
-source "${LOCFILE}"
-echo "Latitude : >${LAT}<"
-echo "Longitude: >${LON}<"
-echo "Height   : >${HGHT}<"
-
-/usr/bin/str2str -in tcpcli://localhost:3131#${RAWFORMAT} -out tcpsvr://:3141#rtcm3 -msg "${MSGS}" -p ${LAT} ${LON} ${HGHT} -t 1
+/usr/bin/str2str -in tcpsvr://localhost:3121#${RAWFORMAT} -out tcpsvr://:3131 -out tcpsvr://:3132#rtcm3 -msg "${MSGS}" -t 1
 
