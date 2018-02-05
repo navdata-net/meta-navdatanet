@@ -6,9 +6,8 @@ export LOCATION="/tmp/location"
 
 export MIN="0.000000000"
 
-MINSOL="`expr 30 \* 60`"
-BARRD="`expr 2 \* 24 \* 60 \* 60`"
-BARRW="`expr 16 \* 24 \* 60 \* 60`"
+declare -A MARGIN=( ["1d"]="1min" ["2w"]="1h" )
+declare -A MINDATA=( ["1d"]="1080" ["2w"]="1008" )
 
 export DBDIR="/var/lib/rrdcached/db"
 export RRD="unix:/var/run/rrdcached.sock"
@@ -19,30 +18,21 @@ source "${CFG}"
 
 NOW="`date +%s`"
 
+WINDOW="1d"
 QLTY="sgl"
-SOLVALS="`rrdtool fetch ${DBDIR}/rtkrcv_solllh.rrd --daemon ${RRD} -a --end now --start end+1min-30m -r 1s AVERAGE | tail -n +3 | grep -v nan | wc -l`"
-[ "${SOLVALS}" -gt 300 ] && QLTY="sol"
+
+
+for QLTY in sol sgl ; do
+  for WINDOW in 2w 1d ; do
+    SOLVALS="`rrdtool fetch ${DBDIR}/rtkrcv_${QLTY}llh.rrd --daemon ${RRD} -a --start +${MARGIN[${WINDOW}]}-${WINDOW} AVERAGE | tail -n +3 | grep -v nan | wc -l`"
+    echo "${SOLVALS} entries in ${WINDOW} of ${QLTY} > ${MINDATA[${WINDOW}]} ?"
+    [ "${SOLVALS}" -gt "${MINDATA[${WINDOW}]}" ] && break
+    done
+  [ "${SOLVALS}" -gt "${MINDATA[${WINDOW}]}" ] && break
+  done
+
+export WINDOW
 export QLTY
-
-WINDOW="30m"
-
-#for QLTY in sol sgl ; do
-#  DTIM="`rrdtool first --daemon ${RRD} ${DBDIR}/rtkrcv_${QLTY}llh.rrd`"
-#  DAGE="`expr ${NOW} - ${DTIM}`"
-#  echo "Age of >${QLTY}<: `expr ${DAGE} / 60`m"
-#  [ "${DAGE}" -gt "${MINSOL}" ] && break
-#  done
-
-#[ "${DAGE}" -gt "${BARRD}" ] && WINDOW="1d"
-#[ "${DAGE}" -gt "${BARRW}" ] && WINDOW="2w"
-
-echo "Choosing >${QLTY}< for window >${WINDOW}<."
-
-TEMP="`rrdtool graph /tmp/test.png --daemon ${RRD} --start +1min-${WINDOW} DEF:lat=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Lat:AVERAGE DEF:lon=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Lon:AVERAGE DEF:hght=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Hght:AVERAGE PRINT:lat:AVERAGE:%.8lf PRINT:lon:AVERAGE:%.8lf PRINT:hght:AVERAGE:%.8lf | awk 'NR>1'`"
-
-export NLAT="`echo ${TEMP} | cut -d ' ' -f 1`"
-export NLON="`echo ${TEMP} | cut -d ' ' -f 2`"
-export NHGHT="`echo ${TEMP} | cut -d ' ' -f 3`"
 
 killProcesses() {
   PROCNAME="${1:-/usr/bin/transceiver}"
@@ -66,13 +56,29 @@ stopTransmission() {
   killAll
   }
 
-[ "${NLAT}" = "nan" ] && stopTransmission
-[ "${NLON}" = "nan" ] && stopTransmission
-[ "${NHGHT}" = "nan" ] && stopTransmission
 
-[ "${NLAT}" = "" ] && stopTransmission
-[ "${NLON}" = "" ] && stopTransmission
-[ "${NHGHT}" = "" ] && stopTransmission
+[ "${QLTY}" = "sgl" -a "${SOLVALS}" -lt "${MINDATA[1d]}" ]  && {
+  echo "Not enough confidence in location."
+  stopTransmission
+  }
+
+echo "Using >${QLTY}< for window >${WINDOW}<."
+
+TEMP="`rrdtool graph /tmp/test.png --daemon ${RRD} --start ${MARGIN[${WINDOW}]}-${WINDOW} DEF:lat=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Lat:AVERAGE DEF:lon=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Lon:AVERAGE DEF:hght=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Hght:AVERAGE PRINT:lat:AVERAGE:%.8lf PRINT:lon:AVERAGE:%.8lf PRINT:hght:AVERAGE:%.8lf | awk 'NR>1'`"
+
+export NLAT="`echo ${TEMP} | cut -d ' ' -f 1`"
+export NLON="`echo ${TEMP} | cut -d ' ' -f 2`"
+export NHGHT="`echo ${TEMP} | cut -d ' ' -f 3`"
+
+[ "${NLAT}" = "nan" -o "${NLON}" = "nan" -o "${NHGHT}" = "nan" ] && {
+  echo "nan location data received."
+  stopTransmission
+  }
+
+[ "${NLAT}" = "" -o "${NLON}" = "" -o "${NHGHT}" = "" ] && {
+  echo "Empty location data received."
+  stopTransmission
+  }
 
 expr ${NLAT} \< ${MIN} >/dev/null && stopTransmission
 expr ${NLON} \< ${MIN} >/dev/null && stopTransmission
