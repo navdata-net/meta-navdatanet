@@ -1,5 +1,5 @@
 # Set sample rate low while configuring receiver
-!UBX CFG-RATE 1000 1 1
+!UBX CFG-RATE 500 1 1
 
 # turn on UBX RXM-RAWX messages on USB
 !UBX CFG-MSG 2 21 0 0 0 1 0 0
