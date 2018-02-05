@@ -1,9 +1,6 @@
 Name="NoName"
 Lat="0.0"
 Lon="0.0"
-Hght="0.0"
 Status="D"
 
-
-Hgt="`printf '%08.3f' ${Hght}`"
-DAEMON_OPTS="-read_tcp 127.0.0.1 3131 -output_caster pylon.navdata.net 10001 10002 10003 10004 10005 10006 -output_basestation ${Lat} ${Lon} RAW ${Status}_UB_${Hgt}_${Name} 1"
+DAEMON_OPTS="-read_tcp 127.0.0.1 3131 -output_caster pylon.navdata.net 10001 10002 10003 10004 10005 10006 -output_basestation ${Lat} ${Lon} RAW ${Status}_UB_${Name} 1"
