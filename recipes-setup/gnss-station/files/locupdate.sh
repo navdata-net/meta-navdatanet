@@ -7,8 +7,8 @@ export PYLON="/tmp/pylon"
 
 export MIN="0.000000000"
 
-declare -A MARGIN=( ["1d"]="1min" ["2w"]="1h" )
-declare -A MINDATA=( ["1d"]="1080" ["2w"]="1008" )
+declare -A MARGIN=( ["30m"]="10s" ["1d"]="1min" ["2w"]="1h" )
+declare -A MINDATA=( ["1d"]="1080" ["2w"]="168" )
 
 export DBDIR="/var/lib/rrdcached/db"
 export RRD="unix:/var/run/rrdcached.sock"
@@ -45,8 +45,8 @@ export NLAT="`echo ${TEMP} | cut -d ' ' -f 1`"
 export NLON="`echo ${TEMP} | cut -d ' ' -f 2`"
 export NHGHT="`echo ${TEMP} | cut -d ' ' -f 3`"
 
-export PLAT="`printf '%.5f' ${NLAT}`"
-export PLON="`printf '%.5f' ${NLON}`"
+export PLAT="`printf '%.4f' ${NLAT}`"
+export PLON="`printf '%.4f' ${NLON}`"
 
 
 
@@ -76,9 +76,17 @@ killAll() {
   exit
   }
 
+deleteLocation() {
+  echo "Deleting ${LOCATION}"
+  [ -f "${LOCATION}" ] && rm -f "${LOCATION}"
+  killLocation
+  exit
+  }
+
 stopAll() {
   echo "Deleting ${LOCATION}"
   [ -f "${LOCATION}" ] && rm -f "${LOCATION}"
+  echo "Deleting ${PYLON}"
   [ -f "${PYLON}" ] && rm -f "${PYLON}"
   killAll
   }
@@ -115,17 +123,23 @@ expr ${NHGHT} \< ${MIN} >/dev/null && zeroOut
   }
 
 [ "${WINDOW}" = "30m" ]  && {
-  echo "Not enough confidence in location."
-  [ -f "${LOCATION}" ] && rm -f "${LOCATION}"
-  killLocation
-  exit
+  echo "Started recently. Not enough confidence in location."
+  deleteLocation
   }
 
 [ "${QLTY}" = "sgl" -a "${SOLVALS}" -lt "${MINDATA[1d]}" ]  && {
   echo "Not enough data collected in location."
-  [ -f "${LOCATION}" ] && rm -f "${LOCATION}"
-  killLocation
-  exit
+  deleteLocation
+  }
+
+
+HMAX="`rrdtool graph /tmp/test.png --daemon ${RRD} --start +${MARGIN[${WINDOW}]}-${WINDOW} DEF:hght=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Hght:AVERAGE PRINT:hght:MAX:%.8lf | awk 'NR>1'`"
+HMIN="`rrdtool graph /tmp/test.png --daemon ${RRD} --start +${MARGIN[${WINDOW}]}-${WINDOW} DEF:hght=${DBDIR}/rtkrcv_${QLTY}llh.rrd:Hght:AVERAGE PRINT:hght:MIN:%.8lf | awk 'NR>1'`"
+HVAR="`echo $HMAX $HMIN | awk '{print int($1-$2)}'`"
+
+[ "${HVAR}" -gt "29" ] && {
+  echo "Height variation too large: ${HVAR}m"
+  deleteLocation
   }
 
 
