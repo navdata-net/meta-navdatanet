@@ -8,12 +8,17 @@ export PYLON="/tmp/pylon"
 export MIN="0.000000000"
 
 declare -A MARGIN=( ["30m"]="10s" ["1d"]="1min" ["2w"]="1h" )
-declare -A MINDATA=( ["1d"]="1080" ["2w"]="168" )
+declare -A MINDATA=( ["1d"]="1080" ["2w"]="1008" )
 
 export DBDIR="/var/lib/rrdcached/db"
 export RRD="unix:/var/run/rrdcached.sock"
 
-[ -f "${CFG}" ] || exit 1
+date
+
+[ -f "${CFG}" ] || {
+  echo "${CFG} missing."
+  exit 1
+  }
 
 source "${CFG}"
 
@@ -66,7 +71,7 @@ killLocation() {
   }
 
 killPylon() {
-  echo "Killing pylon transceiver process."
+  echo "Killing pylon transceiver processes."
   killProcesses '/usr/bin/transceiver'
   }
 
@@ -118,12 +123,13 @@ expr ${NHGHT} \< ${MIN} >/dev/null && zeroOut
 
 [ "${PLAT}" != "${LAT}" -o "${PLON}" != "${LON}" ] && {
   echo "Writing new ${PYLON}"
-  echo -e LAT=\"${PLAT}\"\\nLON=\"${PLON}\"\\n > ${PYLON}
+  echo -e LAT=\"${PLAT}\"\\nLON=\"${PLON}\"\\n > "${PYLON}"
+  cat "${PYLON}"
   killPylon
   }
 
 [ "${WINDOW}" = "30m" ]  && {
-  echo "Started recently. Not enough confidence in location."
+  echo "Not enough confidence in location."
   deleteLocation
   }
 
@@ -147,7 +153,8 @@ HVAR="`echo $HMAX $HMIN | awk '{print int($1-$2)}'`"
 
 [ "${NLAT}" != "${LAT}" -o "${NLON}" != "${LON}" -o "${NHGHT}" != "${HGHT}" ] && {
   echo "Writing new ${LOCATION}"
-  echo -e LAT=\"${NLAT}\"\\nLON=\"${NLON}\"\\nHGHT=\"${NHGHT}\"\\n > ${LOCATION}
+  echo -e LAT=\"${NLAT}\"\\nLON=\"${NLON}\"\\nHGHT=\"${NHGHT}\"\\n > "${LOCATION}"
+  cat "${LOCATION}"
   killLocation
   }
 
