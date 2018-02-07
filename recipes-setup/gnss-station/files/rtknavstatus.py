@@ -158,7 +158,7 @@ if __name__ == "__main__":
     rrd.add('rtkrcv_sys',str(psutil.cpu_freq().current) + ":" + str(psutil.cpu_percent()) + ":" + str(psutil.virtual_memory().available),rcv.TIMESTAMP)
     rrd.add('rtkrcv_sglllh',str(rcv.ROVER.LAT) + ":" + str(rcv.ROVER.LON) + ":" + str(rcv.ROVER.HGHT),rcv.TIMESTAMP)
     rrd.add('rtkrcv_sglxyz',str(rcv.ROVER.SGLX) + ":" + str(rcv.ROVER.SGLY) + ":" + str(rcv.ROVER.SGLZ),rcv.TIMESTAMP)
-    rrd.add('rtkrcv_fltxyz',str(rcv.ROVER.FLTSX) + ":" + str(rcv.ROVER.FLTSY) + ":" + str(rcv.ROVER.FLTSZ),rcv.TIMESTAMP)
+    #rrd.add('rtkrcv_fltxyz',str(rcv.ROVER.FLTSX) + ":" + str(rcv.ROVER.FLTSY) + ":" + str(rcv.ROVER.FLTSZ),rcv.TIMESTAMP)
     rrd.add('rtkrcv_sat',str(rcv.ROVER.SATS) + ":" + str(rcv.BASE.SATS) + ":" + str(rcv.VALIDSATS),rcv.TIMESTAMP)
     rrd.add('rtkrcv_arr',rcv.ARRATIO,rcv.TIMESTAMP)
     rrd.add('rtkrcv_bline',rcv.BASELINEFLT,rcv.TIMESTAMP)
