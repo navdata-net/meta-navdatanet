@@ -62,7 +62,7 @@ for ENTRY in ${DBs} ; do
       export DUR
       COMMAND="`echo ${RRD_GRAPH} | envsubst`"
       echo ${COMMAND}
-      eval ${COMMAND} &
+      eval ${COMMAND}
       sleep 1
       done
     done
