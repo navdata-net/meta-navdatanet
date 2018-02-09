@@ -163,7 +163,7 @@ if __name__ == "__main__":
     rrd.add('rtkrcv_arr',rcv.ARRATIO,rcv.TIMESTAMP)
     rrd.add('rtkrcv_bline',rcv.BASELINEFLT,rcv.TIMESTAMP)
     rrd.add('rtkrcv_dage',rcv.DIFFAGE,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_rtime',rcv.RUNTIME.total_seconds(),rcv.TIMESTAMP)
+    #rrd.add('rtkrcv_rtime',rcv.RUNTIME.total_seconds(),rcv.TIMESTAMP)
     rrd.add('rtkrcv_stat',rcv.STATE,rcv.TIMESTAMP)
 
     if rcv.STATE > 0 :
