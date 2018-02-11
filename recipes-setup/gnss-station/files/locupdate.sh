@@ -57,17 +57,20 @@ export PLON="`printf '%.4f' ${NLON}`"
 
 killProcesses() {
   PROCNAME="${1:-/usr/bin/transceiver}"
-  PROCESSES="`grep -H "^${PROCNAME}" /proc/*/cmdline | cut -d '/' -f 3`"
-  PROCESSES="`echo ${PROCESSES}`"
-  for PROCESS in ${PROCESSES} ; do
-    echo "Killing >${PROCNAME}< process #${PROCESS}"
-    kill ${PROCESS}
+
+  pushd /proc >/dev/null
+  for PROCESS in `ls -d -1 [0-9]*`; do
+    [ -d "/proc/${PROCESS}" ] && cat "/proc/${PROCESS}/cmdline" | tr -s '\0' ' ' | grep "^${PROCNAME}" 2>/dev/null && {
+      echo "Killing >${PROCNAME}< process #${PROCESS}"
+      kill ${PROCESS}
+      }
     done
+  popd >/dev/null
   }
 
 killLocation() {
   echo "Killing location process."
-  #killProcesses '/usr/bin/str2str'
+  killProcesses '/usr/bin/str2str -in tcpcli://127.0.0.1:3132#rtcm3 -out tcpcli://127.0.0.1:3123#rtcm3 -msg 1006(10) -p'
   }
 
 killPylon() {
