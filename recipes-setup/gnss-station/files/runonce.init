@@ -120,6 +120,11 @@ echo "Dismounted /boot" >>"${LOG}"
   reboot
   }
 
+modprobe zram
+echo 512M >/sys/block/zram0/disksize
+mkswap /dev/zram0
+swapon /dev/zram0
+
 grep 'auto wlan0' /etc/network/interfaces >/dev/null || echo 'auto wlan0' >>/etc/network/interfaces
 
 grep '/usr/bin/rtkrcv' /etc/inittab >/dev/null || cat <<EOF >/etc/inittab
@@ -146,7 +151,7 @@ z6:6:respawn:/sbin/sulogin
 9:2345:respawn:su - rtkrcv -c "/usr/local/bin/locsrv" >/dev/tty9 2>/dev/tty9
 10:2345:respawn:su - rtkrcv -c "/usr/local/bin/loc2rtcm" >/dev/tty10 2>/dev/tty10
 11:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream www.pylongps.com" >dev/tty11 2>/dev/tty11
-12:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream pylon.navdata.net" >/dev/tty12 2>/dev/tty12
+#12:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream pylon.navdata.net" >/dev/tty12 2>/dev/tty12
 EOF
 
 init q

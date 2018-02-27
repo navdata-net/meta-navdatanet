@@ -13,6 +13,7 @@ declare -A MINDATA=( ["1d"]="1080" ["2w"]="1008" )
 export DBDIR="/var/lib/rrdcached/db"
 export RRD="unix:/var/run/rrdcached.sock"
 
+echo -e "\033\0143" >/dev/tty4
 date
 
 [ -f "${CFG}" ] || {
