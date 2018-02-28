@@ -55,5 +55,5 @@ NETWORK_OPTIONS="-L"
 
 # Any other options not specifically supported by the script (-P, -f,
 # -F, -B).
-BASE_OPTIONS="-B -f 1d"
+BASE_OPTIONS="-B"
 
