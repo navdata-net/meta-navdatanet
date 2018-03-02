@@ -1,7 +1,7 @@
 #!/bin/sh
 
 TABLES="System;sys,CPU:CPU;sys,MemFree:RAMfree Location;sglllh,Lat:Latitude;sglllh,Lon:Longitude ;sglllh,Hght:Height;stat,Status:Status Solution;solllh,Lat:Latitude;solllh,Lon:Longitude ;solllh,Hght:Height;arr,ARratio:ARratio Satellites;sat,RovSats:LocalSATS;sat,BasSats:RemoteSATS Resolution;sat,ValSats:MatchingSATS;dage,DiffAge:DiffdataAge Distance;bline,Baseline:StationDistance;err,Error:Error"
-PERIODS="30m:30minutes 1d:1day 2w:2weeks 2y:2years"
+PERIODS="30m:30minutes 1d:1day 2w:2weeks 2m:2months"
 
 
 for PERIOD in ${PERIODS} ; do

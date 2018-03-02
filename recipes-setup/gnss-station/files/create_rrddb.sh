@@ -7,7 +7,7 @@ source "${CFG}"
 
 DBDIR="/var/lib/rrdcached/db"
 DATATEMPLATE='DS:${COLUMN}:${TYPE}:2:U:U'
-RRD_CREATE='${DATASET} RRA:${AGGR}:0.5:1:1800 RRA:${AGGR}:0.5:60:1440 RRA:${AGGR}:0.5:3600:672 RRA:${AGGR}:0.5:86400:730'
+RRD_CREATE='${DATASET} RRA:${AGGR}:0.5:1:1800 RRA:${AGGR}:0.5:60:1440 RRA:${AGGR}:0.5:1800:672 RRA:${AGGR}:0.5:7200:672'
 
 for ENTRY in ${DBs} ; do
   DB="`echo ${ENTRY} | cut -d ':' -f 1`"

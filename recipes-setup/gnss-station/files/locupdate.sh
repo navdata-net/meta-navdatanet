@@ -8,7 +8,7 @@ export PYLON="/tmp/pylon"
 export MIN="0.000000000"
 
 declare -A MARGIN=( ["30m"]="10s" ["1d"]="1min" ["2w"]="1h" )
-declare -A MINDATA=( ["1d"]="1080" ["2w"]="1008" )
+declare -A MINDATA=( ["1d"]="1080" ["2w"]="96" )
 
 export DBDIR="/var/lib/rrdcached/db"
 export RRD="unix:/var/run/rrdcached.sock"

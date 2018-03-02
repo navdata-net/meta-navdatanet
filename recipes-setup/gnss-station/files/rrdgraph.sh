@@ -6,7 +6,7 @@ CFG="/etc/default/rrd_rtkrcv"
 source "${CFG}"
 
 
-export DURATIONS="30m 1d 2w 2y"
+export DURATIONS="30m 1d 2w 2m"
 export TMPDIR="/tmp/rrdgraph"
 export DBDIR="/var/lib/rrdcached/db"
 export MIN="0.000000000"
