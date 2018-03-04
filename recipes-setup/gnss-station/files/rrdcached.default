@@ -20,7 +20,7 @@ BASE_PATH=/var/lib/rrdcached/db/
 
 # Where journal files are placed.  If left unset, journaling will
 # be disabled.
-JOURNAL_PATH=/var/lib/rrdcached/journal/
+#JOURNAL_PATH=/var/lib/rrdcached/journal/
 
 # FHS standard placement for process ID file.
 PIDFILE=/var/run/rrdcached.pid
@@ -55,5 +55,5 @@ NETWORK_OPTIONS="-L"
 
 # Any other options not specifically supported by the script (-P, -f,
 # -F, -B).
-BASE_OPTIONS="-B"
+BASE_OPTIONS="-B -f 3600 -F"
 
