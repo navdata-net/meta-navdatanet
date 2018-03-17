@@ -25,8 +25,8 @@ restrict ::1
 #disable auth
 #broadcastclient
 
-server 127.127.1.1
-fudge  127.127.1.1 stratum 12
+#server 127.127.1.1
+#fudge  127.127.1.1 stratum 12
 
 #server 127.127.20.0 mode 17 minpoll 4 noselect
 #fudge 127.127.20.0 flag1 0 time2 0.000 refid GPS0
