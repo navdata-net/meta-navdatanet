@@ -46,6 +46,8 @@ class RTKsite:
   LAT = 0; LON = 0; HGHT = 0
   VELX = 0; VELY = 0; VELZ = 0
   SGLX = 0; SGLY = 0; SGLZ = 0
+  PREVX = 0; PREVY = 0; PREVZ = 0
+  PREVDIST = 0;
   FLTX = 0; FLTY = 0; FLTZ = 0
   FLTSX = 0; FLTSY = 0; FLTSZ = 0
   FIXX = 0; FIXY = 0; FIXZ = 0
@@ -56,22 +58,25 @@ class RTKsite:
     self.LAT,self.LON,self.HGHT=llh.split(',')
 
   def setVelocity(self,xyz):
-    self.VELX,self.VELY,self.VELZ=xyz.split(',')
+    (self.VELX,self.VELY,self.VELZ)=[float(x) for x in xyz.split(',')]
 
   def setSingle(self,xyz):
-    self.SGLX,self.SGLY,self.SGLZ=xyz.split(',')
+    self.PREVX=self.SGLX; self.PREVY=self.SGLY; self.PREVZ=self.SGLZ
+    (self.SGLX,self.SGLY,self.SGLZ)=[float(x) for x in xyz.split(',')]
+    TRX=self.SGLX-self.PREVX; TRY=self.SGLY-self.PREVY ; TRZ=self.SGLZ-self.PREVZ
+    self.PREVDIST=math.sqrt((TRX)**2 + (TRY)**2 + (TRZ)**2)
 
   def setFloat(self,xyz):
-    self.FLTX,self.FLTY,self.FLTZ=xyz.split(',')
+    (self.FLTX,self.FLTY,self.FLTZ)=[float(x) for x in xyz.split(',')]
 
   def setFloatS(self,xyz):
-    self.FLTSX,self.FLTSY,self.FLTSZ=xyz.split(',')
+    (self.FLTSX,self.FLTSY,self.FLTSZ)=[float(x) for x in xyz.split(',')]
 
   def setFix(self,xyz):
-    self.FIXX,self.FIXY,self.FIXZ=xyz.split(',')
+    (self.FIXX,self.FIXY,self.FIXZ)=[float(x) for x in xyz.split(',')]
 
   def setFixS(self,xyz):
-    self.FIXSX,self.FIXSY,self.FIXSZ=xyz.split(',')
+    (self.FIXSX,self.FIXSY,self.FIXSZ)=[float(x) for x in xyz.split(',')]
 
 
 
@@ -155,16 +160,14 @@ class RTKRCVtelnet:
 if __name__ == "__main__":
 
   def updateRRD(rcv):
-    rrd.add('rtkrcv_sys',str(psutil.cpu_freq().current) + ":" + str(psutil.cpu_percent()) + ":" + str(psutil.virtual_memory().available),rcv.TIMESTAMP)
+    rrd.add('rtkrcv_sys',str(psutil.cpu_freq().current) + ":" + str(psutil.cpu_percent()) + ":" + str(psutil.virtual_memory().available) + ":" + str(psutil.swap_memory().free),rcv.TIMESTAMP)
     rrd.add('rtkrcv_sglllh',str(rcv.ROVER.LAT) + ":" + str(rcv.ROVER.LON) + ":" + str(rcv.ROVER.HGHT),rcv.TIMESTAMP)
     rrd.add('rtkrcv_sglxyz',str(rcv.ROVER.SGLX) + ":" + str(rcv.ROVER.SGLY) + ":" + str(rcv.ROVER.SGLZ),rcv.TIMESTAMP)
     #rrd.add('rtkrcv_fltxyz',str(rcv.ROVER.FLTSX) + ":" + str(rcv.ROVER.FLTSY) + ":" + str(rcv.ROVER.FLTSZ),rcv.TIMESTAMP)
     rrd.add('rtkrcv_sat',str(rcv.ROVER.SATS) + ":" + str(rcv.BASE.SATS) + ":" + str(rcv.VALIDSATS),rcv.TIMESTAMP)
-    rrd.add('rtkrcv_arr',rcv.ARRATIO,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_bline',rcv.BASELINEFLT,rcv.TIMESTAMP)
-    rrd.add('rtkrcv_dage',rcv.DIFFAGE,rcv.TIMESTAMP)
+    rrd.add('rtkrcv_base',str(rcv.BASELINEFLT) + ":" + str(rcv.DIFFAGE),rcv.TIMESTAMP)
     #rrd.add('rtkrcv_rtime',rcv.RUNTIME.total_seconds(),rcv.TIMESTAMP)
-    rrd.add('rtkrcv_stat',rcv.STATE,rcv.TIMESTAMP)
+    rrd.add('rtkrcv_stat',str(rcv.STATE) + ":" + str(rcv.ARRATIO),rcv.TIMESTAMP)
 
     if rcv.STATE > 0 :
       rrd.add('rtkrcv_solxyz',str(rcv.ROVER.SGLX) + ":" + str(rcv.ROVER.SGLY) + ":" + str(rcv.ROVER.SGLZ),rcv.TIMESTAMP)
@@ -174,7 +177,12 @@ if __name__ == "__main__":
 
     try:
       error = math.sqrt(float(rcv.ROVER.FLTSX)**2 + float(rcv.ROVER.FLTSY)**2 + float(rcv.ROVER.FLTSZ)**2)
-      rrd.add('rtkrcv_err',error,rcv.TIMESTAMP)
+    except:
+      error = 0
+
+    rrd.add('rtkrcv_var',str(error) + ":" + str(rcv.ROVER.PREVDIST),rcv.TIMESTAMP)
+
+    try:
       os.write(tty,'LVL Sats: %2s  LLH: %11.8f  %12.8f  %7.2f\n' % (rcv.ROVER.SATS,float(rcv.ROVER.LAT),float(rcv.ROVER.LON),float(rcv.ROVER.HGHT)))
       os.write(tty,'RMT Sats: %2s  LLH: %11.8f  %12.8f  %7.2f\n' % (rcv.BASE.SATS,float(rcv.BASE.LAT),float(rcv.BASE.LON),float(rcv.BASE.HGHT)))
     except:

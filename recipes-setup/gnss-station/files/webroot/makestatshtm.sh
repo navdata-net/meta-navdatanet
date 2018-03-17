@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TABLES="System;sys,CPU:CPU;sys,MemFree:RAMfree Location;sglllh,Lat:Latitude;sglllh,Lon:Longitude ;sglllh,Hght:Height;stat,Status:Status Solution;solllh,Lat:Latitude;solllh,Lon:Longitude ;solllh,Hght:Height;arr,ARratio:ARratio Satellites;sat,RovSats:LocalSATS;sat,BasSats:RemoteSATS Resolution;sat,ValSats:MatchingSATS;dage,DiffAge:DiffdataAge Distance;bline,Baseline:StationDistance;err,Error:Error"
+TABLES="System;sys,CPU:CPUload(%);sys,CPUhz:CPUspeed(MHz) ;sys,MemFree:RAMfree(B);sys,SwapFree:SWAPfree(B) Location;sglllh,Lat:Latitude(°);sglllh,Lon:Longitude(°) ;sglllh,Hght:Height(m);stat,Status:Status Solution;solllh,Lat:Latitude(°);solllh,Lon:Longitude(°) ;solllh,Hght:Height(m);stat,ARratio:ARratio Satellites;sat,RovSats:LocalSATS;sat,BasSats:RemoteSATS Resolution;sat,ValSats:MatchingSATS;base,DiffAge:DiffdataAge(s) Distance;base,Baseline:StationDistance(m);var,off:Movement(m/s)"
 PERIODS="30m:30minutes 1d:1day 2w:2weeks 2m:2months"
 
 

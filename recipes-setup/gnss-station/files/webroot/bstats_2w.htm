@@ -12,35 +12,47 @@
     <table border="1" cellpadding="2" cellspacing="2">
       <tbody>
         <tr>
-          <th align='center'>CPU</th>
-          <th align='center'>RAMfree</th>
+          <th align='center'>CPUload(%)</th>
+          <th align='center'>CPUspeed(MHz)</th>
         </tr>
         <tr>
-          <td align='center'><img alt='CPU graph' src='volatile/rtkrcv_sys_CPU_2w.png'></td>
-          <td align='center'><img alt='RAMfree graph' src='volatile/rtkrcv_sys_MemFree_2w.png'></td>
-        </tr>
-    </table>
-    <h3>Location</h3>
-    <table border="1" cellpadding="2" cellspacing="2">
-      <tbody>
-        <tr>
-          <th align='center'>Latitude</th>
-          <th align='center'>Longitude</th>
-        </tr>
-        <tr>
-          <td align='center'><img alt='Latitude graph' src='volatile/rtkrcv_sglllh_Lat_2w.png'></td>
-          <td align='center'><img alt='Longitude graph' src='volatile/rtkrcv_sglllh_Lon_2w.png'></td>
+          <td align='center'><img alt='CPUload(%) graph' src='volatile/rtkrcv_sys_CPU_2w.png'></td>
+          <td align='center'><img alt='CPUspeed(MHz) graph' src='volatile/rtkrcv_sys_CPUhz_2w.png'></td>
         </tr>
     </table>
     <h3></h3>
     <table border="1" cellpadding="2" cellspacing="2">
       <tbody>
         <tr>
-          <th align='center'>Height</th>
+          <th align='center'>RAMfree(B)</th>
+          <th align='center'>SWAPfree(B)</th>
+        </tr>
+        <tr>
+          <td align='center'><img alt='RAMfree(B) graph' src='volatile/rtkrcv_sys_MemFree_2w.png'></td>
+          <td align='center'><img alt='SWAPfree(B) graph' src='volatile/rtkrcv_sys_SwapFree_2w.png'></td>
+        </tr>
+    </table>
+    <h3>Location</h3>
+    <table border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <th align='center'>Latitude(°)</th>
+          <th align='center'>Longitude(°)</th>
+        </tr>
+        <tr>
+          <td align='center'><img alt='Latitude(°) graph' src='volatile/rtkrcv_sglllh_Lat_2w.png'></td>
+          <td align='center'><img alt='Longitude(°) graph' src='volatile/rtkrcv_sglllh_Lon_2w.png'></td>
+        </tr>
+    </table>
+    <h3></h3>
+    <table border="1" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <th align='center'>Height(m)</th>
           <th align='center'>Status</th>
         </tr>
         <tr>
-          <td align='center'><img alt='Height graph' src='volatile/rtkrcv_sglllh_Hght_2w.png'></td>
+          <td align='center'><img alt='Height(m) graph' src='volatile/rtkrcv_sglllh_Hght_2w.png'></td>
           <td align='center'><img alt='Status graph' src='volatile/rtkrcv_stat_Status_2w.png'></td>
         </tr>
     </table>
@@ -48,24 +60,24 @@
     <table border="1" cellpadding="2" cellspacing="2">
       <tbody>
         <tr>
-          <th align='center'>Latitude</th>
-          <th align='center'>Longitude</th>
+          <th align='center'>Latitude(°)</th>
+          <th align='center'>Longitude(°)</th>
         </tr>
         <tr>
-          <td align='center'><img alt='Latitude graph' src='volatile/rtkrcv_solllh_Lat_2w.png'></td>
-          <td align='center'><img alt='Longitude graph' src='volatile/rtkrcv_solllh_Lon_2w.png'></td>
+          <td align='center'><img alt='Latitude(°) graph' src='volatile/rtkrcv_solllh_Lat_2w.png'></td>
+          <td align='center'><img alt='Longitude(°) graph' src='volatile/rtkrcv_solllh_Lon_2w.png'></td>
         </tr>
     </table>
     <h3></h3>
     <table border="1" cellpadding="2" cellspacing="2">
       <tbody>
         <tr>
-          <th align='center'>Height</th>
+          <th align='center'>Height(m)</th>
           <th align='center'>ARratio</th>
         </tr>
         <tr>
-          <td align='center'><img alt='Height graph' src='volatile/rtkrcv_solllh_Hght_2w.png'></td>
-          <td align='center'><img alt='ARratio graph' src='volatile/rtkrcv_arr_ARratio_2w.png'></td>
+          <td align='center'><img alt='Height(m) graph' src='volatile/rtkrcv_solllh_Hght_2w.png'></td>
+          <td align='center'><img alt='ARratio graph' src='volatile/rtkrcv_stat_ARratio_2w.png'></td>
         </tr>
     </table>
     <h3>Satellites</h3>
@@ -85,23 +97,23 @@
       <tbody>
         <tr>
           <th align='center'>MatchingSATS</th>
-          <th align='center'>DiffdataAge</th>
+          <th align='center'>DiffdataAge(s)</th>
         </tr>
         <tr>
           <td align='center'><img alt='MatchingSATS graph' src='volatile/rtkrcv_sat_ValSats_2w.png'></td>
-          <td align='center'><img alt='DiffdataAge graph' src='volatile/rtkrcv_dage_DiffAge_2w.png'></td>
+          <td align='center'><img alt='DiffdataAge(s) graph' src='volatile/rtkrcv_base_DiffAge_2w.png'></td>
         </tr>
     </table>
     <h3>Distance</h3>
     <table border="1" cellpadding="2" cellspacing="2">
       <tbody>
         <tr>
-          <th align='center'>StationDistance</th>
-          <th align='center'>Error</th>
+          <th align='center'>StationDistance(m)</th>
+          <th align='center'>Movement(m/s)</th>
         </tr>
         <tr>
-          <td align='center'><img alt='StationDistance graph' src='volatile/rtkrcv_bline_Baseline_2w.png'></td>
-          <td align='center'><img alt='Error graph' src='volatile/rtkrcv_err_Error_2w.png'></td>
+          <td align='center'><img alt='StationDistance(m) graph' src='volatile/rtkrcv_base_Baseline_2w.png'></td>
+          <td align='center'><img alt='Movement(m/s) graph' src='volatile/rtkrcv_var_off_2w.png'></td>
         </tr>
     </table>
   </body>
