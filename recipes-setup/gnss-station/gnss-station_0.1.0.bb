@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3e00ca6129dc8358315015204ab9fe15"
 
 PR = "rc1"
 
-RDEPENDS_${PN} = "python"
+RDEPENDS_${PN} = "python python-sleekxmpp"
 
 SRC_URI = "file://LICENSE \
            file://runonce.init \
@@ -14,6 +14,7 @@ SRC_URI = "file://LICENSE \
            file://webroot \
            file://rrdcached.init \
            file://rrdcached.default \
+           file://rrdcached.cron \
            file://rrd_rtkrcv.default \
            file://create_rrddb.sh \
            file://rrdbackup.sh \
@@ -34,6 +35,8 @@ SRC_URI = "file://LICENSE \
            file://ecef2llh.py \
            file://rules.v4 \
            file://ntp.conf.template \
+           file://navdatanet.default \
+           file://RTCM3toXMPP.py \
            "
 
 S = "${WORKDIR}"
@@ -60,6 +63,7 @@ do_install() {
     install -m 0644 ${WORKDIR}/raw2rtcm.default ${D}${sysconfdir}/default/raw2rtcm
     install -m 0644 ${WORKDIR}/rrdcached.default ${D}${sysconfdir}/default/rrdcached
     install -m 0644 ${WORKDIR}/rrd_rtkrcv.default ${D}${sysconfdir}/default/rrd_rtkrcv
+    install -m 0644 ${WORKDIR}/navdatanet.default ${D}${sysconfdir}/default/navdatanet
 
     install -d ${D}${sysconfdir}/default/volatiles
     install -m 0644 ${WORKDIR}/rrdgraph.volatiles ${D}${sysconfdir}/default/volatiles/rrdgraph
@@ -78,6 +82,7 @@ do_install() {
     install -m 0644 ${WORKDIR}/rrdgraph.cron ${D}${sysconfdir}/cron.d/rrdgraph
     install -m 0644 ${WORKDIR}/locupdate.cron ${D}${sysconfdir}/cron.d/locupdate
     install -m 0644 ${WORKDIR}/rtkrcv.cron ${D}${sysconfdir}/cron.d/rtkrcv
+    install -m 0644 ${WORKDIR}/rrdcached.cron ${D}${sysconfdir}/cron.d/rrdcached
 
     install -d ${D}/usr/local/bin
     install -m 0755 ${WORKDIR}/create_rrddb.sh ${D}/usr/local/bin/create_rrddb
@@ -92,6 +97,7 @@ do_install() {
     install -m 0755 ${WORKDIR}/raw2rtcm.sh ${D}/usr/local/bin/raw2rtcm
     install -m 0755 ${WORKDIR}/locsrv.sh ${D}/usr/local/bin/locsrv
     install -m 0755 ${WORKDIR}/loc2rtcm.sh ${D}/usr/local/bin/loc2rtcm
+    install -m 0755 ${WORKDIR}/RTCM3toXMPP.py ${D}/usr/local/bin/RTCM3toXMPP
     
 }
 

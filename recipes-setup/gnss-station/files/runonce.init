@@ -122,6 +122,8 @@ echo "Dismounted /boot" >>"${LOG}"
 
 grep 'auto wlan0' /etc/network/interfaces >/dev/null || echo 'auto wlan0' >>/etc/network/interfaces
 
+[ -e "/home/navdata" ] || useradd navdata
+
 grep '/usr/bin/rtkrcv' /etc/inittab >/dev/null || cat <<EOF >/etc/inittab
 id:5:initdefault:
 si::sysinit:/etc/init.d/rcS
@@ -145,8 +147,7 @@ z6:6:respawn:/sbin/sulogin
 
 9:2345:respawn:su - rtkrcv -c "/usr/local/bin/locsrv" >/dev/tty9 2>/dev/tty9
 10:2345:respawn:su - rtkrcv -c "/usr/local/bin/loc2rtcm" >/dev/tty10 2>/dev/tty10
-11:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream www.pylongps.com" >dev/tty11 2>/dev/tty11
-#12:2345:respawn:su - pylon -c "/usr/local/bin/pushrawstream pylon.navdata.net" >/dev/tty12 2>/dev/tty12
+12:2345:respawn:su - navdata -c "/usr/local/bin/pushrawstream" >/dev/tty12 2>/dev/tty12
 EOF
 
 init q
