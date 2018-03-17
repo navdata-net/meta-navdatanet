@@ -60,12 +60,10 @@ class RTCM3toXMPP(sleekxmpp.ClientXMPP):
 
 
   def xmitbin(self,msgbody,msgbinary):
-    cid = self['xep_0231'].set_bob(msgbinary, 'application/octet-stream')
     msg = self.Message()
     msg['to'] = self.room
     msg['type'] = 'groupchat'
     msg['body'] = msgbody
-    msg['bob']['cid'] = cid
     msg['bob']['type'] = 'application/octet-stream'
     msg['bob']['data'] = msgbinary
     msg.send()
