@@ -4,8 +4,11 @@ CFG="/etc/default/rrd_rtkrcv"
 XYZ="/tmp/xyz"
 export LOCATION="/tmp/location"
 export PYLON="/tmp/pylon"
+export NAVDATANET="/etc/default/navdatanet"
 
 export MIN="0.000000000"
+export XMPPuser="anonymous"
+export XMPPpwd="anonymous"
 
 declare -A MARGIN=( ["30m"]="10s" ["1d"]="1min" ["2w"]="1h" )
 declare -A MINDATA=( ["1d"]="1080" ["2w"]="96" )
@@ -159,6 +162,8 @@ HVAR="`echo $HMAX $HMIN | awk '{print int($1-$2)}'`"
   echo "Writing new ${LOCATION}"
   echo -e LAT=\"${NLAT}\"\\nLON=\"${NLON}\"\\nHGHT=\"${NHGHT}\"\\n > "${LOCATION}"
   cat "${LOCATION}"
+  [ -f "${NAVDATANET}" ] && source "${NAVDATANET}"
+  sendXMPPmsg -j "${XMPPuser}@navdata.net" -p "${XMPPpwd}" -t "navdatanet@navdata.net" -m "setlocation ${NLAT},${NLON},${NHGHT}"
   killLocation
   }
 

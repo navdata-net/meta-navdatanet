@@ -37,6 +37,7 @@ SRC_URI = "file://LICENSE \
            file://ntp.conf.template \
            file://navdatanet.default \
            file://RTCM3toXMPP.py \
+           file://sendXMPPmsg.py \
            "
 
 S = "${WORKDIR}"
@@ -98,6 +99,7 @@ do_install() {
     install -m 0755 ${WORKDIR}/locsrv.sh ${D}/usr/local/bin/locsrv
     install -m 0755 ${WORKDIR}/loc2rtcm.sh ${D}/usr/local/bin/loc2rtcm
     install -m 0755 ${WORKDIR}/RTCM3toXMPP.py ${D}/usr/local/bin/RTCM3toXMPP
+    install -m 0755 ${WORKDIR}/sendXMPPmsg.py ${D}/usr/local/bin/sendXMPPmsg
     
 }
 
