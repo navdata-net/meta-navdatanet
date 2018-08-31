@@ -122,6 +122,12 @@ echo "Dismounted /boot" >>"${LOG}"
 
 grep 'auto wlan0' /etc/network/interfaces >/dev/null || echo 'auto wlan0' >>/etc/network/interfaces
 
+grep 'vm.swappiness' /etc/sysctl.conf >/dev/null || cat <<EOF >>/etc/sysctl.conf
+vm.swappiness = 10
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+EOF
+
 [ -e "/home/navdata" ] || useradd navdata
 
 grep '/usr/bin/rtkrcv' /etc/inittab >/dev/null || cat <<EOF >/etc/inittab
