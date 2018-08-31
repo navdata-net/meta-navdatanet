@@ -3,7 +3,7 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/bin/rrdcached
 NAME=rrdcached
 DESC="rrdcached"
-PID=/run/$NAME.pid
+PID=/var/run/$NAME.pid
 
 test -x $DAEMON || exit 0
 
@@ -26,34 +26,27 @@ DAEMON_OPTS="\
   ${SOCKFILE:+${SOCKGROUP:+-s ${SOCKGROUP}} ${SOCKMODE:+-m ${SOCKMODE}} -l unix:${SOCKFILE}} \
   "
 
-set -e
-
 case "$1" in
   start)
         echo -n "Starting $DESC: "
-        start-stop-daemon --start --quiet --pidfile $PID \
-                -n $NAME -x $DAEMON -- $DAEMON_OPTS
+        start-stop-daemon --start --quiet --pidfile $PID -n $NAME -x $DAEMON -- $DAEMON_OPTS
         echo "$NAME."
         ;;
   stop)
         echo -n "Stopping $DESC: "
-        start-stop-daemon -K --quiet --pidfile $PID \
-                -n $NAME
+        start-stop-daemon -K --quiet --pidfile $PID -n $NAME
         echo "$NAME."
         ;;
   restart|force-reload)
         echo -n "Restarting $DESC: "
-        start-stop-daemon -K --quiet --pidfile $PID \
-                -n $NAME
+        start-stop-daemon -K --quiet --pidfile $PID -n $NAME
         sleep 1
-        start-stop-daemon --start --quiet --pidfile $PID \
-                -n $NAME -x $DAEMON -- $DAEMON_OPTS
+        start-stop-daemon --start --quiet --pidfile $PID -n $NAME -x $DAEMON -- $DAEMON_OPTS
         echo "$NAME."
         ;;
   reload)
       echo -n "Reloading $DESC configuration: "
-      start-stop-daemon --stop --signal HUP --quiet --pidfile $PID \
-          --exec $DAEMON
+      start-stop-daemon --stop --signal HUP --quiet --pidfile $PID --exec $DAEMON
       echo "$NAME."
       ;;
   *)
@@ -64,3 +57,4 @@ case "$1" in
 esac
 
 exit 0
+
