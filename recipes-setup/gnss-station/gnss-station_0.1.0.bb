@@ -65,6 +65,7 @@ do_install() {
     install -m 0644 ${WORKDIR}/rrdcached.default ${D}${sysconfdir}/default/rrdcached
     install -m 0644 ${WORKDIR}/rrd_rtkrcv.default ${D}${sysconfdir}/default/rrd_rtkrcv
     install -m 0644 ${WORKDIR}/navdatanet.default ${D}${sysconfdir}/default/navdatanet
+    install -m 0644 ${WORKDIR}/zram.default ${D}${sysconfdir}/default/zram
 
     install -d ${D}${sysconfdir}/default/volatiles
     install -m 0644 ${WORKDIR}/rrdgraph.volatiles ${D}${sysconfdir}/default/volatiles/rrdgraph
