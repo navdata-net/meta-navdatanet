@@ -163,7 +163,7 @@ HVAR="`echo $HMAX $HMIN | awk '{print int($1-$2)}'`"
   echo -e LAT=\"${NLAT}\"\\nLON=\"${NLON}\"\\nHGHT=\"${NHGHT}\"\\n > "${LOCATION}"
   cat "${LOCATION}"
   [ -f "${NAVDATANET}" ] && source "${NAVDATANET}"
-  sendXMPPmsg -j "${XMPPuser}@navdata.net" -p "${XMPPpwd}" -t "navdatanet@navdata.net" -m "setlocation ${NLAT},${NLON},${NHGHT}"
+  /usr/local/bin/navcli "setlocation ${NLAT},${NLON},${NHGHT}"
   killLocation
   }
 
