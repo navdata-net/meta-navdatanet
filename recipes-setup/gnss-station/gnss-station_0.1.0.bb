@@ -10,6 +10,7 @@ RDEPENDS_${PN} = "python python-sleekxmpp"
 
 SRC_URI = "file://LICENSE \
            file://runonce.init \
+           file://zram.default \
            file://iptables.init \
            file://webroot \
            file://rrdcached.init \
