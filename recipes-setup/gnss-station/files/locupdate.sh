@@ -140,7 +140,7 @@ expr ${NHGHT} \< ${MIN} >/dev/null && zeroOut
   deleteLocation
   }
 
-[ "${QLTY}" = "sgl" -a "${SOLVALS}" -lt "${MINDATA[1d]}" ]  && {
+[ "${QLTY}" = "sgl" -a "${WINDOW}" = "1d" -a "${SOLVALS}" -lt "${MINDATA[1d]}" ]  && {
   echo "Not enough data collected in location."
   deleteLocation
   }
