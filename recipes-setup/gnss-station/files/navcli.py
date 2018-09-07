@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
     xmpp = SendMsgBot(cred.XMPPuser + '@navdata.net', cred.XMPPpwd, 'navdatanet@navdata.net', args.message[0])
 
-    if xmpp.connect(address=('xmpp.navdata.net',5222)):
+    if xmpp.connect(address=('xmpp.navdata.net',5222),reattempt=False):
         xmpp.process(block=True)
     else:
         print("500:Unable to connect.")
